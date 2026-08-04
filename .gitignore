@@ -1,0 +1,20 @@
+# 作業系統與編輯器的雜檔
+Thumbs.db
+desktop.ini
+.DS_Store
+*.tmp
+~$*
+
+# Google Drive 的暫存
+.tmp.drivedownload/
+.tmp.driveupload/
+
+# 學生資料一律不進版控。
+# 目前的設計本來就不會產生這類檔案（姓名與照片只存在瀏覽器的
+# localStorage / IndexedDB），這裡是雙重保險：
+# 萬一有人手動把「匯出備份檔」存進網站資料夾，也不會被 commit 上去。
+班級名單備份*.json
+*名單*.json
+*學生*.json
+*名單*.csv
+*學生*.csv

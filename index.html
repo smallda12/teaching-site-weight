@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>重量｜教學網</title>
+<!-- 內嵌的分頁小圖示，順便避免每次載入都對 favicon.ico 發出 404 -->
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><text y='26' font-size='26'>⚖️</text></svg>">
+<link rel="stylesheet" href="css/style.css?v=1">
+</head>
+<body>
+
+<!-- ══════════ 頁首 ══════════ -->
+<header class="頁首">
+  <div class="頁首左">
+    <!-- ⚠️ 這個 emoji 與上面 favicon 的 emoji 要一起換成新單元的主題圖示 -->
+    <span class="頁首圖示">⚖️</span>
+    <div>
+      <h1 id="單元標題">重量</h1>
+      <p id="單元資訊"></p>
+    </div>
+  </div>
+  <span id="版本標" class="版本標"></span>
+</header>
+
+<!-- ══════════ 導覽 ══════════ -->
+<nav class="導覽">
+  <button class="導覽鈕" data-區="區點名">🙋 點點名</button>
+  <button class="導覽鈕" data-區="區輪播">🃏 圖詞輪播</button>
+  <button class="導覽鈕" data-區="區影片">🎬 教學影片</button>
+  <button class="導覽鈕" data-區="區教學">📚 教材教學</button>
+  <button class="導覽鈕" data-區="區評量">📝 評量區</button>
+  <button class="導覽鈕" data-區="區自學">🧠 自學區</button>
+  <button class="導覽鈕" data-區="區延伸">🔗 延伸學習</button>
+</nav>
+
+<main>
+
+<!-- ══════════ 一、點點名 ══════════ -->
+<section class="分區" id="區點名">
+  <h2>🙋 點點名</h2>
+
+  <div class="卡片 抽籤卡">
+    <div id="抽籤結果" class="抽籤結果">
+      <div class="抽籤待機">按下面的按鈕開始點名</div>
+    </div>
+    <div id="輪次狀態" class="輪次狀態"></div>
+    <div class="按鈕列 置中">
+      <button class="超大鈕" id="鈕抽籤">🎲 抽籤點名</button>
+      <button class="次要鈕" id="鈕重開一輪">↺ 重新開始一輪</button>
+    </div>
+  </div>
+
+  <div class="卡片">
+    <h3>新增學生</h3>
+    <div class="表單列">
+      <input id="輸入姓名" type="text" placeholder="輸入姓名" maxlength="10">
+      <label id="照片欄" class="檔案鈕">
+        📷 選擇照片
+        <input id="輸入照片" type="file" accept="image/*" hidden>
+      </label>
+      <button class="主要鈕" id="鈕新增學生">➕ 新增</button>
+    </div>
+    <p class="小字">💾 姓名與照片會自動存在這台電腦，<b>下次打開就直接在，不用重新上傳</b>。資料不會傳到網路上。</p>
+  </div>
+
+  <div class="卡片">
+    <div class="卡片標列">
+      <h3>班級名單 <span id="名單計數" class="小字"></span></h3>
+      <div class="按鈕列 無上距">
+        <button class="次要鈕" id="鈕匯出名單">💾 匯出備份檔</button>
+        <label class="檔案鈕">📂 匯入備份檔
+          <input id="輸入備份" type="file" accept="application/json,.json" hidden>
+        </label>
+        <button class="次要鈕" id="鈕清空名單">🗑 清空名單</button>
+      </div>
+    </div>
+    <p class="小字">匯出的備份檔可以存到隨身碟或雲端，換一台電腦時匯入就能直接用。</p>
+    <div id="名單區" class="名單區"></div>
+  </div>
+</section>
+
+<!-- ══════════ 二、圖詞輪播 ══════════ -->
+<section class="分區" id="區輪播">
+  <h2>🃏 圖詞輪播</h2>
+  <!-- ⚠️ 張數要依 data.js 的 圖卡 陣列長度改 -->
+  <p class="區說明">用本單元的 10 張學習圖卡，隨機抽或自動輪播，抽到就唸出來。適合全班一起看。</p>
+
+  <div class="卡片 輪播卡">
+    <div class="輪播版面">
+      <img id="輪播圖" class="輪播圖" alt="">
+
+      <div class="輪播右欄">
+        <p class="小標">點按下面兩個按鈕，可以分開重複練習</p>
+        <button class="唸詞鈕" id="鈕唸詞">
+          <span class="唸鈕圖示">🔊</span><span id="輪播詞" class="輪播詞"></span>
+        </button>
+        <button class="唸句鈕" id="鈕唸句">
+          <span class="唸鈕圖示">🔊</span><span id="輪播稿" class="輪播稿"></span>
+        </button>
+        <div id="輪播序" class="小字"></div>
+      </div>
+    </div>
+
+    <div class="按鈕列 置中">
+      <button class="次要鈕" id="鈕輪上一">← 上一張</button>
+      <button class="主要鈕" id="鈕輪隨機">🎲 隨機抽一張</button>
+      <button class="次要鈕" id="鈕輪下一">下一張 →</button>
+    </div>
+    <div class="按鈕列 置中">
+      <button class="次要鈕" id="鈕輪唸">🔊 完整唸一次（詞 → 說明）</button>
+      <button class="次要鈕" id="鈕自動輪播">▶ 自動輪播</button>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════ 三、教學影片 ══════════ -->
+<section class="分區" id="區影片">
+  <h2>🎬 教學影片</h2>
+  <div class="卡片">
+    <div class="影片區塊">
+      <div class="影片主體">
+        <video id="影片播放器" class="影片" controls playsinline preload="metadata"></video>
+        <p class="小字" id="影片說明">影片內含字幕。點播放鍵開始，右下角可切換全螢幕。</p>
+      </div>
+      <!-- 播放清單：主影片＋各重點短片，由 app.js 依 data.js 自動產生 -->
+      <div class="影片清單" id="影片清單"></div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════ 四、教材教學區 ══════════ -->
+<section class="分區" id="區教學">
+  <h2>📚 教材教學區</h2>
+  <p class="區說明">依課程進度分成六個教學重點，流程是「教學頁 → 主題短片 → 三題形成性評量」。<br>
+    六個重點都可以直接點進去，<b>不用照順序上</b>，老師可以依課堂需要挑要教的重點。</p>
+
+  <div class="卡片 進度卡">
+    <span id="教學總進度" class="進度文字"></span>
+    <div class="按鈕列">
+      <button class="次要鈕" id="鈕自動朗讀">🔊 自動朗讀：開</button>
+      <!-- ⚠️ 括號裡的頁碼要依單元的開場頁數改（data.js 的 開場 陣列） -->
+      <button class="次要鈕" id="鈕看開場">▶ 播放開場（P01–P03）</button>
+      <button class="次要鈕" id="鈕重置進度">↺ 重置進度</button>
+    </div>
+  </div>
+  <p class="小字" id="朗讀說明"></p>
+
+  <div id="開場區" class="卡片"></div>
+
+  <div id="重點選單">
+    <div id="重點清單" class="重點清單"></div>
+  </div>
+
+  <div id="重點內容" class="卡片"></div>
+
+  <div id="收尾區" class="卡片">
+    <!-- ⚠️ 頁碼要依 data.js 的 收尾 陣列改 -->
+    <h3>🎊 綜合活動與收尾（P25–P28）</h3>
+    <div id="收尾內容" class="收尾清單"></div>
+  </div>
+</section>
+
+<!-- ══════════ 五、評量區 ══════════ -->
+<section class="分區" id="區評量">
+  <h2>📝 評量區</h2>
+
+  <div class="卡片" id="評量開始區">
+    <h3>單元總評量</h3>
+    <p class="區說明">把六個重點的 18 題形成性評量集中做一次，做完會顯示各重點的正確率。<br>
+      選項位置與簡報上的 A、B 完全一致，不會隨機變動。</p>
+    <div class="按鈕列">
+      <button class="超大鈕" id="鈕開始評量">✏️ 開始評量（18 題）</button>
+    </div>
+
+    <h3 class="分隔標">紙本教材</h3>
+    <div class="按鈕列">
+      <button class="次要鈕" id="鈕開學習單">📄 學習單</button>
+      <button class="次要鈕" id="鈕開練習單">📄 評量練習單</button>
+      <button class="次要鈕" id="鈕開圖卡PDF">📄 學習圖卡</button>
+      <button class="次要鈕" id="鈕開簡報PDF">📄 完整簡報</button>
+    </div>
+  </div>
+
+  <div class="卡片" id="評量進行區"></div>
+  <div id="評量結果區" style="display:none"></div>
+</section>
+
+<!-- ══════════ 六、自學區 ══════════ -->
+<section class="分區" id="區自學">
+  <h2>🧠 自學區</h2>
+  <p class="區說明">點一下圖卡就會放大，並且唸出來。放大後可以用左右箭頭換下一張，按右上角的 ✕ 回到全部圖卡。</p>
+
+  <div class="卡片 自學控制">
+    <div class="按鈕列 無上距 置中">
+      <button class="主要鈕" id="鈕自學輪播">▶ 自動輪播全部圖卡</button>
+      <label class="勾選"><input type="checkbox" id="只播標題"> 只播標題，不唸說明</label>
+    </div>
+    <p class="小字">自動輪播會依序放大每一張圖卡並唸出來，唸完才換下一張。按 ✕ 或再按一次按鈕可停止。</p>
+  </div>
+
+  <div id="圖卡牆" class="圖卡牆"></div>
+</section>
+
+<!-- ══════════ 七、延伸學習（外部影片，需要網路） ══════════ -->
+<section class="分區" id="區延伸">
+  <h2>🔗 延伸學習</h2>
+  <p class="區說明">這裡是本單元相關的<b>外部教學影片</b>，可以讓學生課後自己再看一次。<br>
+    影片來自均一教育平台、臺北酷課雲、內政部消防署等公開頻道。</p>
+  <p class="小字 延伸提醒">⚠️ 點下去會<b>開新分頁到 YouTube</b>（需要網路，也會看到 YouTube 的推薦影片），
+    建議由老師或家長陪同觀看。網站其他分區不受影響，沒有網路也能正常上課。</p>
+
+  <div id="延伸內容"></div>
+</section>
+
+<!-- 圖卡放大檢視 -->
+<div id="放大層" class="放大層">
+  <button class="放大關" id="鈕放大關" title="關閉">✕</button>
+  <button class="放大箭 左" id="鈕放大左" title="上一張">‹</button>
+  <div class="放大盒">
+    <img id="放大圖" alt="">
+    <button class="唸詞鈕" id="鈕放大唸詞">
+      <span class="唸鈕圖示">🔊</span><span id="放大詞" class="放大詞"></span>
+    </button>
+    <button class="唸句鈕" id="鈕放大唸句">
+      <span class="唸鈕圖示">🔊</span><span id="放大稿" class="放大稿"></span>
+    </button>
+    <div class="放大底列">
+      <span id="放大序" class="小字"></span>
+      <button class="次要鈕" id="鈕放大唸">🔊 完整唸一次</button>
+    </div>
+  </div>
+  <button class="放大箭 右" id="鈕放大右" title="下一張">›</button>
+</div>
+
+</main>
+
+<!-- ══════════ 側邊工具列 ══════════ -->
+<div class="工具列">
+  <button class="工具鈕" id="鈕畫筆" title="畫筆">🖊️</button>
+  <button class="工具鈕" id="鈕計時" title="計時器">⏱️</button>
+</div>
+
+<!-- 畫筆面板 -->
+<div class="工具面板" id="畫筆面板">
+  <div class="面板標">🖊️ 畫筆 <button class="關鈕" id="鈕關畫筆">✕</button></div>
+  <div class="色列">
+    <button class="色塊" data-色="#e6194b" title="紅"></button>
+    <button class="色塊" data-色="#f58231" title="橙"></button>
+    <button class="色塊" data-色="#ffd400" title="黃"></button>
+    <button class="色塊" data-色="#bfef45" title="黃綠"></button>
+    <button class="色塊" data-色="#3cb44b" title="綠"></button>
+    <button class="色塊" data-色="#008080" title="墨綠"></button>
+    <button class="色塊" data-色="#42d4f4" title="天藍"></button>
+    <button class="色塊" data-色="#4363d8" title="藍"></button>
+    <button class="色塊" data-色="#911eb4" title="紫"></button>
+    <button class="色塊" data-色="#f032e6" title="桃紅"></button>
+    <button class="色塊" data-色="#9a6324" title="咖啡"></button>
+    <button class="色塊" data-色="#000000" title="黑"></button>
+  </div>
+  <label class="面板列">粗細 <input type="range" id="筆粗" min="2" max="24" value="6"></label>
+  <div class="面板列">
+    <button class="次要鈕" id="鈕橡皮">🧽 橡皮擦</button>
+    <button class="次要鈕" id="鈕清畫">🗑 清除全部</button>
+  </div>
+</div>
+
+<!-- 計時器面板 -->
+<div class="工具面板" id="計時器面板">
+  <div class="面板標">⏱️ 計時器 <button class="關鈕" id="鈕關計時">✕</button></div>
+  <p class="小標">三個計時器各自獨立，可以同時跑。</p>
+  <div id="計時器清單"></div>
+</div>
+
+<canvas id="畫布" class="畫布"></canvas>
+
+<!-- 改版時把 v 加 1，避免瀏覽器沿用舊快取 -->
+<script src="js/config.js?v=1"></script>
+<script src="js/data.js?v=1"></script>
+<script src="js/speech.js?v=1"></script>
+<script src="js/tools.js?v=1"></script>
+<script src="js/app.js?v=1"></script>
+</body>
+</html>

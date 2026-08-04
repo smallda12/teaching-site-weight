@@ -1,0 +1,701 @@
+/* ==========================================================
+   植物小百科教學網 — 樣式
+   特教取向：大字體、高對比、大按鈕、清楚焦點
+   ========================================================== */
+:root {
+  --綠深: #1b5e20;
+  --綠: #2e7d32;
+  --綠淺: #a5d6a7;
+  --綠背: #f1f8e9;
+  --橘: #ef6c00;
+  --紅: #c62828;
+  --藍: #1565c0;
+  --字: #1a1a1a;
+  --灰: #5f6368;
+  --框: #cfd8dc;
+  --白: #ffffff;
+  --圓: 16px;
+  --陰影: 0 2px 10px rgba(0, 0, 0, .12);
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  font-family: "Microsoft JhengHei", "PingFang TC", "Noto Sans TC", sans-serif;
+  font-size: 20px;
+  line-height: 1.7;
+  color: var(--字);
+  background: var(--綠背);
+  -webkit-text-size-adjust: 100%;
+}
+
+h1 { font-size: 34px; margin: 0; }
+h2 { font-size: 34px; margin: 0 0 16px; color: var(--綠深); }
+h3 { font-size: 26px; margin: 0 0 12px; color: var(--綠深); }
+
+/* ---------- 頁首 ---------- */
+.頁首 {
+  display: flex; align-items: center; justify-content: space-between; gap: 16px;
+  padding: 16px 24px; background: var(--綠深); color: #fff; flex-wrap: wrap;
+}
+.頁首左 { display: flex; align-items: center; gap: 14px; }
+.頁首圖示 { font-size: 44px; }
+.頁首 p { margin: 2px 0 0; font-size: 17px; opacity: .9; }
+.版本標 { padding: 6px 16px; border-radius: 999px; font-size: 17px; font-weight: 700; }
+.版本標.教室 { background: #ffd54f; color: #4e342e; }
+.版本標.公開 { background: #90caf9; color: #0d47a1; }
+
+/* ---------- 導覽 ---------- */
+.導覽 {
+  display: flex; gap: 8px; padding: 12px 20px; background: var(--綠);
+  overflow-x: auto; position: sticky; top: 0; z-index: 40;
+}
+.導覽鈕 {
+  flex: 0 0 auto; font: inherit; font-size: 21px; font-weight: 700;
+  padding: 12px 22px; border: 3px solid transparent; border-radius: 999px;
+  background: rgba(255, 255, 255, .18); color: #fff; cursor: pointer; white-space: nowrap;
+}
+.導覽鈕:hover { background: rgba(255, 255, 255, .3); }
+.導覽鈕.作用中 { background: #fff; color: var(--綠深); border-color: #ffd54f; }
+
+main { max-width: 1100px; margin: 0 auto; padding: 24px 20px 120px; }
+.分區 { display: none; }
+.分區.顯示 { display: block; }
+.區說明 { font-size: 19px; color: var(--灰); margin: 0 0 16px; }
+.小字 { font-size: 16px; color: var(--灰); font-weight: 400; }
+.空白提示 { color: var(--灰); font-size: 19px; }
+
+/* ---------- 卡片與按鈕 ---------- */
+.卡片 {
+  background: var(--白); border-radius: var(--圓); padding: 22px;
+  box-shadow: var(--陰影); margin-bottom: 20px;
+}
+.卡片標列 { display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
+.分隔標 { margin-top: 26px; padding-top: 20px; border-top: 2px dashed var(--框); }
+
+.按鈕列 { display: flex; gap: 12px; flex-wrap: wrap; margin-top: 16px; align-items: center; }
+
+button { font-family: inherit; }
+.主要鈕, .次要鈕, .超大鈕, .檔案鈕 {
+  font-size: 22px; font-weight: 700; padding: 14px 26px;
+  border-radius: 999px; cursor: pointer; border: 3px solid transparent;
+  display: inline-flex; align-items: center; gap: 8px;
+}
+.主要鈕 { background: var(--綠); color: #fff; }
+.主要鈕:hover { background: var(--綠深); }
+.次要鈕 { background: #fff; color: var(--綠深); border-color: var(--綠淺); }
+.次要鈕:hover { background: var(--綠背); border-color: var(--綠); }
+.次要鈕.作用中, .次要鈕.選中 { background: var(--綠深); color: #fff; border-color: var(--綠深); }
+.超大鈕 { background: var(--橘); color: #fff; font-size: 30px; padding: 20px 44px; }
+.超大鈕:hover { filter: brightness(.92); }
+.檔案鈕 { background: #fff; color: var(--藍); border-color: #90caf9; }
+button:disabled { opacity: .55; cursor: default; }
+:focus-visible { outline: 4px solid #ff8f00; outline-offset: 3px; }
+
+input[type=text], input[type=number], textarea, select {
+  font: inherit; font-size: 21px; padding: 12px 16px;
+  border: 3px solid var(--框); border-radius: 12px; background: #fff;
+}
+input[type=text]:focus, textarea:focus { border-color: var(--綠); outline: none; }
+.表單列 { display: flex; gap: 12px; flex-wrap: wrap; align-items: center; }
+.表單列 input[type=text] { flex: 1 1 240px; }
+.勾選 { display: inline-flex; align-items: center; gap: 10px; font-size: 20px; cursor: pointer; }
+.勾選 input { width: 26px; height: 26px; accent-color: var(--綠); }
+
+/* ---------- 一、點點名 ---------- */
+.抽籤卡 { text-align: center; }
+.按鈕列.置中 { justify-content: center; }
+.按鈕列.無上距 { margin-top: 0; }
+
+/* 抽籤結果：左邊大照片、右邊大姓名 */
+.抽籤結果 {
+  min-height: 320px; display: flex; align-items: center; justify-content: center;
+  gap: 40px; flex-wrap: wrap; padding: 10px 0;
+}
+.抽籤結果.跳出 { animation: 彈出 .5s cubic-bezier(.2, 1.4, .5, 1); }
+@keyframes 彈出 { from { transform: scale(.3); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+.抽籤待機 { font-size: 24px; color: var(--灰); }
+
+.中籤照片區 {
+  width: 300px; height: 300px; flex: 0 0 auto; border-radius: 24px; overflow: hidden;
+  background: var(--綠淺); border: 8px solid var(--橘);
+  display: flex; align-items: center; justify-content: center;
+}
+.中籤照片區 img { width: 100%; height: 100%; object-fit: cover; }
+.中籤字頭 { font-size: 150px; font-weight: 800; color: var(--綠深); }
+/* 不讓文字區撐滿剩餘寬度，照片與姓名才會靠在一起、整組置中 */
+.中籤文字區 { flex: 0 1 auto; min-width: 220px; text-align: center; }
+.中籤姓名 { font-size: 88px; font-weight: 800; color: var(--橘); line-height: 1.2; word-break: break-all; }
+.中籤序 { font-size: 22px; color: var(--灰); margin-top: 10px; }
+
+.輪次狀態 { font-size: 22px; font-weight: 700; color: var(--綠深); margin-top: 6px; }
+.輪次狀態 .輪完 { color: var(--橘); font-size: 26px; }
+
+.名單區 { display: flex; flex-wrap: wrap; gap: 16px; margin-top: 14px; }
+.學生卡 {
+  position: relative; width: 130px; text-align: center; cursor: pointer;
+  background: var(--綠背); border-radius: 14px; padding: 12px 8px; border: 3px solid var(--綠淺);
+}
+.學生卡:hover { border-color: var(--綠); }
+.學生卡.已點過 { opacity: .5; background: #eeeeee; border-color: #bdbdbd; }
+.學生卡.已點過 .頭像 { filter: grayscale(1); }
+.已點標 { font-size: 15px; font-weight: 700; color: var(--灰); }
+.頭像 {
+  width: 84px; height: 84px; margin: 0 auto 8px; border-radius: 50%; overflow: hidden;
+  background: var(--綠淺); display: flex; align-items: center; justify-content: center;
+  font-size: 38px; font-weight: 800; color: var(--綠深);
+}
+.頭像 img { width: 100%; height: 100%; object-fit: cover; }
+.學生卡 .姓名 { font-size: 21px; font-weight: 700; word-break: break-all; }
+.刪鈕 {
+  position: absolute; top: 4px; right: 4px; width: 30px; height: 30px; line-height: 1;
+  border-radius: 50%; border: none; background: #ffcdd2; color: var(--紅);
+  font-size: 17px; font-weight: 800; cursor: pointer;
+}
+
+/* ---------- 二、圖詞輪播 ---------- */
+.輪播卡 { text-align: center; }
+.輪播版面 {
+  display: grid; grid-template-columns: minmax(0, 1.15fr) minmax(280px, 1fr);
+  gap: 24px; align-items: center;
+}
+.輪播圖 {
+  width: 100%; max-height: 46vh; object-fit: contain;
+  border-radius: 14px; border: 4px solid var(--綠淺); cursor: pointer; background: #fff;
+}
+.輪播右欄 { display: flex; flex-direction: column; gap: 14px; text-align: left; }
+.小標 { font-size: 16px; color: var(--灰); margin: 0; }
+
+/* 詞與說明句各自獨立成按鈕，可以一直重複點來練習 */
+.唸詞鈕, .唸句鈕 {
+  font: inherit; display: flex; align-items: center; gap: 14px; text-align: left;
+  border-radius: 18px; cursor: pointer; padding: 18px 20px; background: #fff;
+}
+.唸詞鈕 { border: 5px solid var(--綠); }
+.唸句鈕 { border: 5px solid var(--橘); }
+.唸詞鈕:hover { background: var(--綠背); }
+.唸句鈕:hover { background: #fff8ec; }
+.唸詞鈕:active, .唸句鈕:active { transform: scale(.98); }
+.唸鈕圖示 { font-size: 30px; flex: 0 0 auto; }
+.輪播詞 { font-size: 52px; font-weight: 800; color: var(--綠深); line-height: 1.2; }
+.輪播稿 { font-size: 24px; font-weight: 600; color: var(--字); line-height: 1.5; }
+
+/* ---------- 三、影片 ---------- */
+.影片 { width: 100%; border-radius: 14px; background: #000; display: block; }
+
+/* 影片播放清單（2026-07-31 老師指定）：主影片旁邊列出各重點短片，學生自己切換。
+   ⚠️ 清單項目數依單元而異（四個或五個重點，有的重點沒有短片），
+      所以按鈕是 app.js 依 data.js 產生的，不要寫死在 HTML。 */
+.影片區塊 { display: flex; gap: 18px; align-items: flex-start; }
+.影片主體 { flex: 1 1 auto; min-width: 0; }
+.影片清單 { flex: 0 0 320px; display: flex; flex-direction: column; gap: 10px; }
+.影片鈕 {
+  display: flex; align-items: center; gap: 12px; width: 100%;
+  text-align: left; font-family: inherit; font-size: 22px; font-weight: 700;
+  color: var(--字); background: var(--白); border: 3px solid var(--綠淺);
+  border-radius: 14px; padding: 12px 14px; cursor: pointer; line-height: 1.3;
+}
+.影片鈕:hover { background: var(--綠背); }
+.影片鈕.播放中 { background: var(--綠); border-color: var(--綠深); color: #fff; }
+.影片鈕 .清單圖示 { font-size: 30px; flex: 0 0 auto; }
+.影片鈕 .清單標題 { flex: 1 1 auto; }
+.影片清單標 { font-size: 20px; font-weight: 700; color: var(--灰); margin: 0 0 2px; }
+
+/* 直式或窄螢幕：清單移到影片下方，改成一整排 */
+@media (max-width: 900px) {
+  .影片區塊 { flex-direction: column; }
+  .影片清單 { flex: 1 1 auto; width: 100%; }
+}
+
+/* ---------- 四、教學區 ---------- */
+.進度卡 { display: flex; align-items: center; justify-content: space-between; gap: 16px; flex-wrap: wrap; }
+.進度卡 .按鈕列 { margin-top: 0; }
+.進度文字 { font-size: 24px; font-weight: 700; color: var(--綠深); }
+
+/* 自動朗讀關閉時，按鈕用橘色標示「目前是關的」 */
+#鈕自動朗讀.作用中 { background: var(--橘); color: #fff; border-color: var(--橘); }
+#朗讀說明 { margin: -8px 0 16px; }
+body.作答中 #區教學 > #朗讀說明 { display: none; }
+
+/* 自學區的輪播控制列 */
+.自學控制 { padding: 14px 18px; }
+.自學控制 .小字 { margin: 10px 0 0; text-align: center; }
+#鈕自學輪播.作用中 { background: var(--橘); border-color: var(--橘); color: #fff; }
+
+.重點清單 { display: grid; gap: 16px; }
+.重點卡 {
+  display: flex; align-items: center; gap: 18px; text-align: left; width: 100%;
+  background: #fff; border: 4px solid var(--綠淺); border-radius: var(--圓);
+  padding: 18px 22px; cursor: pointer; box-shadow: var(--陰影); font: inherit;
+}
+.重點卡:hover { border-color: var(--綠); transform: translateY(-2px); }
+.重點卡.已過 { background: #e8f5e9; border-color: var(--綠); }
+.重點卡.鎖住 { opacity: .5; cursor: not-allowed; filter: grayscale(.6); }
+.重點圖示 { font-size: 52px; }
+.重點文字 { flex: 1; }
+.重點標題 { font-size: 28px; font-weight: 800; color: var(--綠深); }
+.重點副標 { font-size: 20px; color: var(--字); }
+.重點對應 { font-size: 16px; color: var(--灰); margin-top: 4px; }
+.重點狀態 { font-size: 21px; font-weight: 700; color: var(--橘); white-space: nowrap; }
+
+.階段列 { display: flex; align-items: center; gap: 14px; flex-wrap: wrap; margin-bottom: 10px; }
+.階段標 { font-size: 24px; font-weight: 800; color: var(--綠深); }
+.階段badge { padding: 6px 16px; border-radius: 999px; font-size: 17px; font-weight: 700; }
+.階段badge.教學中 { background: #e3f2fd; color: var(--藍); }
+.階段badge.評量中 { background: #fff3e0; color: var(--橘); }
+.階段badge.短片中 { background: #ede7f6; color: #5e35b1; }
+
+/* 每個重點的主題短片：和題目圖一樣吃掉剩餘高度，按鈕不會被擠出畫面 */
+.重點短片 {
+  width: 100%; max-height: 46vh; border-radius: 14px;
+  background: #000; display: block; margin: 0 auto;
+}
+body.作答中 .重點短片 {
+  flex: 1 1 0; height: 0; min-height: 80px; max-height: none; object-fit: contain;
+}
+
+.大圖 { width: 100%; border-radius: 14px; border: 3px solid var(--框); display: block; background: #fff; }
+
+/* 題目／解說畫面的圖：用視窗高度限制，讓題目、選項、按鈕都塞得進一個畫面，不用捲動 */
+.大圖.題圖 {
+  width: auto; max-width: 100%; max-height: 34vh;
+  margin: 0 auto; object-fit: contain;
+}
+
+.口播稿 { font-size: 30px; font-weight: 600; margin: 18px 0 0; }
+.題幹 { font-size: 32px; font-weight: 800; text-align: center; margin: 14px 0 12px; color: var(--綠深); }
+
+.選項列 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+.選項鈕 {
+  font: inherit; font-size: 32px; font-weight: 800; padding: 20px 16px;
+  border: 5px solid var(--綠淺); border-radius: 20px; background: #fff;
+  cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 14px;
+}
+.選項鈕:hover:not(:disabled) { border-color: var(--綠); background: var(--綠背); }
+.選項鈕.答對 { background: #c8e6c9; border-color: var(--綠); }
+.選項鈕.答錯 { background: #ffcdd2; border-color: var(--紅); animation: 搖 .4s; }
+.選項鈕.正解提示 { border-color: var(--綠); background: #e8f5e9; }
+@keyframes 搖 { 25% { transform: translateX(-10px); } 75% { transform: translateX(10px); } }
+
+.解說卡 { margin-top: 16px; padding-top: 14px; border-top: 3px dashed var(--綠淺); }
+.解說 { font-size: 28px; font-weight: 700; color: var(--綠深); text-align: center; margin: 12px 0 0; }
+
+.通關卡 { text-align: center; padding: 30px 10px; }
+.通關圖示 { font-size: 90px; }
+.通關卡 h3 { font-size: 32px; }
+.通關說明 { font-size: 24px; }
+.通關卡 .按鈕列 { justify-content: center; }
+
+.收尾清單 { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 18px; }
+.收尾卡 { background: var(--綠背); border-radius: 14px; padding: 14px; text-align: center; }
+.收尾卡 img { width: 100%; border-radius: 10px; }
+.收尾卡 p { font-size: 19px; margin: 10px 0; }
+
+.開場卡 { background: #fff; border-radius: var(--圓); padding: 22px; box-shadow: var(--陰影); margin-bottom: 20px; }
+.開場卡 .按鈕列 { justify-content: center; }
+
+/* ---------- 五、評量區 ---------- */
+.進度條 { height: 12px; background: #e0e0e0; border-radius: 999px; overflow: hidden; margin-bottom: 10px; }
+.進度條 > div { height: 100%; background: var(--橘); transition: width .3s; }
+.成績卡 { background: #fff; border-radius: var(--圓); padding: 28px; box-shadow: var(--陰影); text-align: center; }
+.成績大數 { font-size: 76px; font-weight: 800; color: var(--橘); }
+.成績說明 { font-size: 24px; }
+.成績表 { width: 100%; border-collapse: collapse; margin-top: 20px; font-size: 19px; }
+.成績表 th, .成績表 td { padding: 12px 10px; border-bottom: 2px solid var(--框); text-align: left; }
+.成績表 th { color: var(--綠深); }
+.率條 { height: 16px; background: #e0e0e0; border-radius: 999px; overflow: hidden; min-width: 90px; }
+.率條 > div { height: 100%; background: var(--綠); }
+.成績卡 .按鈕列 { justify-content: center; }
+
+/* ---------- 六、自學區 ---------- */
+.圖卡牆 { display: grid; grid-template-columns: repeat(auto-fill, minmax(230px, 1fr)); gap: 20px; }
+.圖卡 {
+  background: #fff; border: 5px solid var(--綠淺); border-radius: 18px; padding: 0;
+  overflow: hidden; cursor: pointer; display: flex; flex-direction: column;
+  box-shadow: var(--陰影); font: inherit;
+}
+.圖卡:hover { border-color: var(--綠); transform: translateY(-3px); }
+.圖卡 img { width: 100%; aspect-ratio: 16 / 9; object-fit: cover; display: block; }
+.圖卡詞 { font-size: 30px; font-weight: 800; color: var(--綠深); padding: 8px; background: #fff; }
+
+/* ---------- 側邊工具列 ---------- */
+.工具列 { position: fixed; right: 16px; bottom: 20px; display: flex; flex-direction: column; gap: 12px; z-index: 60; }
+.工具鈕 {
+  width: 68px; height: 68px; border-radius: 50%; border: 4px solid #fff;
+  background: var(--綠深); color: #fff; font-size: 30px; cursor: pointer;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, .3);
+}
+.工具鈕.作用中 { background: var(--橘); }
+
+.工具面板 {
+  position: fixed; right: 96px; bottom: 20px; width: 300px; background: #fff;
+  border-radius: var(--圓); box-shadow: 0 6px 26px rgba(0, 0, 0, .3);
+  padding: 16px; z-index: 61; display: none;
+}
+.工具面板.開 { display: block; }
+.面板標 { font-size: 22px; font-weight: 800; color: var(--綠深); display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
+.關鈕 { border: none; background: #eee; border-radius: 50%; width: 32px; height: 32px; font-size: 17px; cursor: pointer; }
+.面板列 { display: flex; gap: 10px; align-items: center; margin-top: 12px; flex-wrap: wrap; font-size: 18px; }
+.面板列.直 { flex-direction: column; align-items: stretch; }
+.面板列 input[type=number] { width: 84px; }
+.面板列 textarea { width: 100%; font-size: 18px; }
+.面板列 .次要鈕, .面板列 .主要鈕 { font-size: 18px; padding: 10px 16px; }
+.色列 { display: grid; grid-template-columns: repeat(6, 1fr); gap: 8px; }
+.色塊 { width: 100%; aspect-ratio: 1; border-radius: 50%; border: 3px solid #fff; box-shadow: 0 0 0 2px var(--框); cursor: pointer; }
+.色塊:hover { transform: scale(1.12); }
+.色塊.選中 { box-shadow: 0 0 0 4px var(--橘); transform: scale(1.12); }
+/* 三個獨立計時器 */
+#計時器面板 { width: 330px; max-height: 82vh; overflow-y: auto; }
+#計時器清單 { display: flex; flex-direction: column; gap: 12px; }
+.計時盒 { border: 3px solid var(--框); border-radius: 14px; padding: 10px 12px 12px; }
+.計時盒 .面板列 { margin-top: 8px; }
+.計時標 { font-size: 16px; font-weight: 700; color: var(--灰); }
+.計時顯示 { font-size: 44px; font-weight: 800; text-align: center; color: var(--綠深); font-variant-numeric: tabular-nums; line-height: 1.1; }
+.計時顯示.跑動中 { color: var(--橘); }
+.計時顯示.快到了 { color: var(--紅); animation: 閃 1s infinite; }
+@keyframes 閃 { 50% { opacity: .35; } }
+.計時盒.時間到 { border-color: var(--橘); animation: 提醒 .6s 6; }
+@keyframes 提醒 { 50% { box-shadow: 0 0 0 6px rgba(239, 108, 0, .5); } }
+
+/* ---------- 作答／教學專注版面：一個畫面裝得下，不用捲動 ---------- */
+body.作答中 #區教學 > h2,
+body.作答中 #區教學 > .區說明,
+body.作答中 #區教學 > .進度卡,
+body.作答中 #區評量 > h2 { display: none; }
+body.作答中 main { padding-top: 12px; padding-bottom: 12px; }
+
+/* 顯示與否一律用 class 控制，不要用行內 style，
+   否則行內的 display:block 會蓋掉下面的 flex 排版 */
+#重點內容, #評量進行區, #收尾區, #開場區 { display: none; }
+#重點內容.顯示, #評量進行區.顯示, #收尾區.顯示, #開場區.顯示 { display: block; }
+/* 上課／作答時，同一個分區裡「沒在用」的區塊要讓開，不然會把內容擠扁。
+   收尾區在作答中一律隱藏（它永遠不會是正在上的內容）。四個重點都完成後
+   收尾區會帶著 .顯示，所以要用 #區教學 > #收尾區 這種兩個 id 的選擇器
+   把權重拉高，才蓋得過 #收尾區.顯示 —— 否則它會佔滿高度把教材擠扁。 */
+body.作答中 #區教學 > #收尾區 { display: none; }
+body.作答中 #開場區:not(.顯示) { display: none; }
+
+/* 整頁改成 flex 直向：頁首與導覽固定，內容區自動吃掉剩下的高度。
+   不需要用 JS 量高度，導覽換行或手機網址列出現都會自動跟著調整。 */
+body.作答中 {
+  height: 100vh; height: 100dvh;
+  overflow: hidden; display: flex; flex-direction: column;
+}
+body.作答中 .頁首, body.作答中 .導覽 { flex: 0 0 auto; }
+body.作答中 main {
+  flex: 1 1 auto; min-height: 0; display: flex; flex-direction: column;
+  width: 100%; max-width: 1100px; margin: 0 auto;
+}
+body.作答中 .分區.顯示 { flex: 1 1 auto; min-height: 0; display: flex; flex-direction: column; }
+
+/* 作答時壓縮頁首，把空間讓給教材圖片 */
+body.作答中 .頁首 { padding: 6px 20px; }
+body.作答中 .頁首圖示 { font-size: 28px; }
+body.作答中 .頁首 h1 { font-size: 22px; }
+body.作答中 .頁首 p { display: none; }
+body.作答中 .導覽 { padding: 6px 20px; }
+body.作答中 .導覽鈕 { font-size: 18px; padding: 7px 16px; }
+
+body.作答中 #重點內容.顯示,
+body.作答中 #評量進行區.顯示,
+body.作答中 #開場區.顯示 {
+  display: flex; flex-direction: column; gap: 8px;
+  flex: 1 1 auto; min-height: 0;
+  overflow: hidden; margin-bottom: 0; padding: 14px 20px;
+}
+/* flex-basis:0 讓圖片剛好吃掉「其他元素排完後剩下的高度」，
+   object-fit:contain 保持比例縮放；這樣按鈕永遠不會被擠出畫面 */
+body.作答中 .大圖.題圖 {
+  flex: 1 1 0; height: 0; min-height: 60px; max-height: none;
+  width: 100%; object-fit: contain;
+}
+body.作答中 .階段列,
+body.作答中 .題幹,
+body.作答中 .口播稿,
+body.作答中 .解說,
+body.作答中 .選項列,
+body.作答中 .按鈕列,
+body.作答中 .進度條 { flex: 0 0 auto; margin-top: 0; margin-bottom: 0; }
+body.作答中 .口播稿 { text-align: center; }
+.階段badge.答對了 { background: #c8e6c9; color: var(--綠深); }
+
+/* ---------- 圖卡放大檢視 ---------- */
+.放大層 {
+  position: fixed; inset: 0; z-index: 70; display: none;
+  background: rgba(0, 0, 0, .82); align-items: center; justify-content: center; gap: 10px; padding: 20px;
+}
+.放大層.開 { display: flex; }
+.放大盒 {
+  background: #fff; border-radius: 22px; padding: 20px; max-width: 1000px; width: 100%;
+  max-height: calc(100vh - 40px); max-height: calc(100dvh - 40px);
+  display: flex; flex-direction: column; gap: 12px; text-align: center;
+}
+.放大盒 img {
+  width: 100%; flex: 1 1 auto; min-height: 0; object-fit: contain;
+  border-radius: 14px; border: 4px solid var(--綠淺); background: #fff;
+}
+.放大詞 { font-size: 62px; font-weight: 800; color: var(--綠深); line-height: 1.15; }
+.放大稿 { font-size: 30px; font-weight: 600; color: var(--字); }
+/* 放大檢視裡的標題與說明各自是一顆可重複點的發音按鈕 */
+.放大盒 .唸詞鈕, .放大盒 .唸句鈕 {
+  flex: 0 0 auto; justify-content: center; padding: 10px 18px; gap: 12px;
+}
+.放大底列 { display: flex; align-items: center; justify-content: center; gap: 18px; }
+.放大關 {
+  position: absolute; top: 18px; right: 18px; width: 62px; height: 62px; border-radius: 50%;
+  border: 4px solid #fff; background: var(--紅); color: #fff; font-size: 30px; font-weight: 800; cursor: pointer;
+}
+.放大箭 {
+  flex: 0 0 auto; width: 72px; height: 110px; border-radius: 18px; border: 4px solid #fff;
+  background: rgba(255, 255, 255, .18); color: #fff; font-size: 56px; line-height: 1; cursor: pointer;
+}
+.放大箭:hover { background: rgba(255, 255, 255, .35); }
+
+/* 畫布：未啟用時完全不擋操作 */
+.畫布 { position: fixed; inset: 0; z-index: 50; pointer-events: none; touch-action: none; }
+.畫布.啟用 { pointer-events: auto; cursor: crosshair; }
+
+/* ══════════════════════════════════════════════════
+   響應式：電腦（上面的基準樣式）／平板／手機
+   ══════════════════════════════════════════════════ */
+
+/* ---------- 平板：601px – 1024px ---------- */
+@media (max-width: 1024px) {
+  body { font-size: 19px; }
+  h1 { font-size: 30px; }
+  h2 { font-size: 30px; }
+  main { padding: 20px 16px 110px; }
+
+  /* 六個分區換行排好，不用左右滑就能全部點到 */
+  .導覽 { flex-wrap: wrap; overflow-x: visible; justify-content: center; }
+  .導覽鈕 { font-size: 19px; padding: 10px 16px; flex: 0 1 auto; }
+  .主要鈕, .次要鈕, .檔案鈕 { font-size: 20px; padding: 12px 22px; }
+  .超大鈕 { font-size: 27px; padding: 18px 36px; }
+
+  .題幹 { font-size: 30px; }
+  .選項鈕 { font-size: 30px; padding: 20px 14px; }
+  .口播稿 { font-size: 26px; }
+  .解說 { font-size: 26px; }
+
+  .輪播版面 { grid-template-columns: minmax(0, 1fr) minmax(240px, .9fr); gap: 18px; }
+  .輪播詞 { font-size: 44px; }
+  .輪播稿 { font-size: 21px; }
+
+  .中籤照片區 { width: 240px; height: 240px; }
+  .中籤字頭 { font-size: 120px; }
+  .中籤姓名 { font-size: 68px; }
+
+  .圖卡牆 { grid-template-columns: repeat(auto-fill, minmax(190px, 1fr)); gap: 16px; }
+  .圖卡詞 { font-size: 26px; }
+
+  .放大詞 { font-size: 50px; }
+  .放大稿 { font-size: 25px; }
+  .放大箭 { width: 60px; height: 96px; font-size: 46px; }
+}
+
+/* ---------- 手機：≤ 600px ---------- */
+@media (max-width: 600px) {
+  body { font-size: 17px; }
+  h1 { font-size: 24px; }
+  h2 { font-size: 25px; }
+  main { padding: 16px 12px 100px; }
+  .卡片 { padding: 16px 14px; border-radius: 14px; }
+
+  .頁首 { padding: 10px 14px; gap: 10px; }
+  .頁首圖示 { font-size: 32px; }
+  .頁首 p { font-size: 14px; }
+  .版本標 { font-size: 14px; padding: 4px 12px; }
+
+  /* 導覽改成換行排列，六個分區一眼全看得到，不用左右滑 */
+  .導覽 { padding: 8px 10px; gap: 6px; flex-wrap: wrap; overflow-x: visible; justify-content: center; }
+  .導覽鈕 { font-size: 16px; padding: 8px 12px; border-width: 2px; flex: 0 1 auto; }
+
+  .主要鈕, .次要鈕, .檔案鈕 { font-size: 18px; padding: 11px 18px; }
+  .超大鈕 { font-size: 22px; padding: 15px 26px; }
+  .區說明 { font-size: 16px; }
+  input[type=text], input[type=number], textarea { font-size: 18px; padding: 10px 12px; }
+
+  /* 題目：兩選一維持左右並排，字縮小但仍好按 */
+  .題幹 { font-size: 25px; margin: 8px 0; }
+  .選項列 { grid-template-columns: 1fr 1fr; gap: 10px; }
+  .選項鈕 { font-size: 23px; padding: 16px 8px; border-width: 4px; border-radius: 14px; }
+  .口播稿 { font-size: 20px; }
+  .解說 { font-size: 21px; }
+  .階段標 { font-size: 19px; }
+  .階段badge { font-size: 14px; padding: 4px 10px; }
+  body.作答中 #重點內容,
+  body.作答中 #評量進行區 { padding: 12px 12px; gap: 6px; }
+
+  /* 圖詞輪播：改成上下排列 */
+  .輪播版面 { grid-template-columns: 1fr; gap: 12px; }
+  .輪播圖 { max-height: 32vh; }
+  .輪播詞 { font-size: 36px; }
+  .輪播稿 { font-size: 19px; }
+  .唸詞鈕, .唸句鈕 { padding: 14px 14px; gap: 10px; border-width: 4px; }
+  .唸鈕圖示 { font-size: 24px; }
+
+  /* 點名：照片與姓名上下排 */
+  .抽籤結果 { gap: 14px; min-height: 0; }
+  .中籤照片區 { width: 180px; height: 180px; border-width: 6px; }
+  .中籤字頭 { font-size: 88px; }
+  .中籤文字區 { flex-basis: 100%; }
+  .中籤姓名 { font-size: 46px; }
+  .輪次狀態 { font-size: 18px; }
+  .學生卡 { width: 104px; }
+  .頭像 { width: 66px; height: 66px; font-size: 30px; }
+  .學生卡 .姓名 { font-size: 18px; }
+  .卡片標列 { flex-direction: column; align-items: flex-start; }
+
+  /* 重點卡：圖示縮小，文字換行 */
+  .重點卡 { padding: 14px; gap: 12px; }
+  .重點圖示 { font-size: 38px; }
+  .重點標題 { font-size: 22px; }
+  .重點副標 { font-size: 17px; }
+  .重點對應 { font-size: 14px; }
+  .重點狀態 { font-size: 17px; }
+
+  /* 圖卡牆：兩欄 */
+  .圖卡牆 { grid-template-columns: repeat(2, 1fr); gap: 12px; }
+  .圖卡 { border-width: 4px; border-radius: 14px; }
+  .圖卡詞 { font-size: 21px; padding: 6px; }
+
+  /* 放大檢視：箭頭移到底部，圖才有空間 */
+  .放大層 { padding: 10px; flex-wrap: wrap; }
+  .放大盒 { order: 1; padding: 14px; border-radius: 16px; gap: 8px; max-height: calc(100dvh - 90px); }
+  .放大詞 { font-size: 38px; }
+  .放大稿 { font-size: 19px; }
+  .放大箭 { order: 2; width: 40%; height: 56px; font-size: 34px; }
+  .放大關 { width: 46px; height: 46px; font-size: 22px; top: 8px; right: 8px; }
+
+  /* 側邊工具：按鈕縮小，面板改成貼底整寬 */
+  .工具列 { right: 10px; bottom: 12px; gap: 8px; }
+  .工具鈕 { width: 54px; height: 54px; font-size: 24px; border-width: 3px; }
+  .工具面板 { right: 8px; left: 8px; width: auto; bottom: 76px; padding: 12px; }
+  #計時器面板 { width: auto; max-height: 70vh; max-height: 70dvh; }
+  .計時顯示 { font-size: 36px; }
+  .色塊 { border-width: 2px; }
+
+  .成績大數 { font-size: 56px; }
+  .成績表 { font-size: 16px; }
+  .收尾清單 { grid-template-columns: 1fr; }
+}
+
+/* ---------- 手機直立、螢幕很窄（≤ 380px） ---------- */
+@media (max-width: 380px) {
+  .選項鈕 { font-size: 20px; padding: 14px 6px; }
+  .題幹 { font-size: 22px; }
+  .圖卡詞 { font-size: 19px; }
+  .中籤照片區 { width: 150px; height: 150px; }
+  .中籤姓名 { font-size: 38px; }
+}
+
+/* ---------- 橫躺且畫面很矮（手機橫拿、小筆電） ---------- */
+@media (max-height: 560px) and (orientation: landscape) {
+  .頁首 { padding: 5px 14px; }
+  .頁首圖示 { font-size: 24px; }
+  h1 { font-size: 19px; }
+  .頁首 p { font-size: 12px; }
+  /* 高度吃緊，導覽改回單排橫向捲動，不要佔掉兩排 */
+  .導覽 { padding: 5px 10px; gap: 5px; flex-wrap: nowrap; overflow-x: auto; justify-content: flex-start; }
+  .導覽鈕 { font-size: 14px; padding: 5px 10px; }
+
+  body.作答中 .頁首 { padding: 3px 12px; }
+  body.作答中 .頁首圖示 { font-size: 20px; }
+  body.作答中 .頁首 h1 { font-size: 16px; }
+  body.作答中 .導覽 { padding: 3px 8px; }
+  body.作答中 .導覽鈕 { font-size: 13px; padding: 4px 9px; }
+  body.作答中 main { padding: 6px 10px; }
+  body.作答中 #重點內容.顯示,
+  body.作答中 #評量進行區.顯示 { gap: 4px; padding: 8px 12px; }
+  body.作答中 .大圖.題圖 { min-height: 40px; }
+
+  .階段列 { margin-bottom: 2px; gap: 8px; }
+  .階段標 { font-size: 16px; }
+  .階段badge { font-size: 12px; padding: 2px 8px; }
+  .題幹 { font-size: 20px; margin: 2px 0; }
+  .選項列 { gap: 8px; }
+  .選項鈕 { font-size: 20px; padding: 8px 6px; border-width: 3px; border-radius: 12px; }
+  .口播稿, .解說 { font-size: 17px; }
+  .按鈕列 { margin-top: 4px; gap: 8px; }
+  .主要鈕, .次要鈕 { font-size: 15px; padding: 7px 14px; }
+  .進度條 { height: 8px; margin-bottom: 4px; }
+
+  .輪播版面 { grid-template-columns: minmax(0, 1fr) minmax(220px, .8fr); }
+  .輪播圖 { max-height: 52vh; }
+  .輪播詞 { font-size: 30px; }
+  .唸詞鈕, .唸句鈕 { padding: 10px 12px; }
+  .放大詞 { font-size: 28px; }
+  .放大稿 { font-size: 16px; }
+  .放大箭 { width: 46px; height: 70px; font-size: 32px; }
+  .工具鈕 { width: 44px; height: 44px; font-size: 20px; }
+  .工具面板 { bottom: 62px; max-height: 78vh; overflow-y: auto; }
+}
+
+/* ---------- 大螢幕電腦（≥ 1500px）：再放大一級 ---------- */
+@media (min-width: 1500px) {
+  main { max-width: 1280px; }
+  .題幹 { font-size: 36px; }
+  .選項鈕 { font-size: 36px; }
+  .輪播詞 { font-size: 60px; }
+  .中籤姓名 { font-size: 100px; }
+  .中籤照片區 { width: 340px; height: 340px; }
+}
+
+/* ---------- 觸控裝置：取消 hover 位移，避免點一下卡住外觀 ---------- */
+@media (hover: none) {
+  .重點卡:hover, .圖卡:hover, .色塊:hover { transform: none; }
+}
+
+/* ================================================================
+   分區七：延伸學習（外部影片卡片，點了外連 YouTube）
+   ================================================================ */
+.延伸提醒 {
+  background: #fff8e1; border: 2px solid #ffcc80; border-radius: var(--圓);
+  padding: 12px 16px; margin: 12px 0 20px; line-height: 1.7;
+}
+.延伸組 { margin-bottom: 28px; }
+.延伸組標 {
+  font-size: 26px; color: var(--綠深); margin: 0 0 12px;
+  padding-left: 12px; border-left: 8px solid var(--綠淺);
+}
+.延伸牆 { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 18px; }
+.延伸卡 {
+  display: flex; flex-direction: column; text-decoration: none; color: inherit;
+  background: var(--白); border: 2px solid var(--框); border-radius: var(--圓);
+  overflow: hidden; transition: transform .12s, box-shadow .12s, border-color .12s;
+}
+.延伸卡:hover, .延伸卡:focus-visible {
+  transform: translateY(-3px); border-color: var(--綠);
+  box-shadow: 0 6px 18px rgba(0, 0, 0, .14); outline: none;
+}
+.延伸縮圖 { position: relative; aspect-ratio: 16 / 9; background: var(--綠背); }
+.延伸縮圖 img { width: 100%; height: 100%; object-fit: cover; display: block; }
+/* 沒有網路時縮圖抓不到，用一個大圖示頂替，版面不會塌掉 */
+.延伸縮圖.無縮圖::before {
+  content: "🎬"; position: absolute; inset: 0;
+  display: flex; align-items: center; justify-content: center; font-size: 54px;
+}
+.延伸時長 {
+  position: absolute; right: 8px; bottom: 8px;
+  background: rgba(0, 0, 0, .78); color: #fff;
+  font-size: 15px; padding: 2px 8px; border-radius: 6px;
+}
+.延伸文字 { padding: 12px 14px 14px; display: flex; flex-direction: column; gap: 4px; }
+.延伸標題 { font-size: 20px; font-weight: 700; line-height: 1.45; }
+.延伸來源 { font-size: 16px; color: var(--灰); }
+.延伸說明 { font-size: 16px; color: var(--字); line-height: 1.6; margin-top: 2px; }
+.延伸卡::after {
+  content: "▶ 在 YouTube 開啟"; margin: 0 14px 12px;
+  font-size: 16px; color: var(--藍); font-weight: 700;
+}
+
+@media (max-width: 1024px) {
+  .延伸組標 { font-size: 23px; }
+  .延伸標題 { font-size: 19px; }
+}
+@media (max-width: 600px) {
+  .延伸牆 { grid-template-columns: 1fr; }
+  .延伸組標 { font-size: 21px; }
+  .延伸標題 { font-size: 18px; }
+}
