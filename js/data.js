@@ -552,6 +552,8 @@ window.UNIT = {
   ],
   "資源": {
     "影片": "assets/video/lesson.mp4",
+    "新版影片": "assets/video/lesson_v2.mp4",
+    "新版影片標題": "教學影片（2026新版）",
     "簡報PDF": "assets/pdf/slides.pdf",
     "學習單": "assets/pdf/worksheet.pdf",
     "評量練習單": "assets/pdf/assessment.pdf",
