@@ -699,3 +699,8 @@ body.作答中 .口播稿 { text-align: center; }
   .延伸組標 { font-size: 21px; }
   .延伸標題 { font-size: 18px; }
 }
+
+/* ---------- 磅秤遊戲（內嵌的互動小遊戲） ---------- */
+.遊戲框 { border: 4px solid var(--綠深); border-radius: var(--圓); overflow: hidden; background: #fff8e7; box-shadow: var(--陰影); }
+.遊戲框 iframe { display: block; width: 100%; height: min(78vh, 780px); min-height: 520px; border: 0; }
+a.次要鈕 { text-decoration: none; }

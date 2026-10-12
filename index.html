@@ -6,7 +6,7 @@
 <title>重量｜教學網</title>
 <!-- 內嵌的分頁小圖示，順便避免每次載入都對 favicon.ico 發出 404 -->
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><text y='26' font-size='26'>⚖️</text></svg>">
-<link rel="stylesheet" href="css/style.css?v=5">
+<link rel="stylesheet" href="css/style.css?v=6">
 </head>
 <body>
 
@@ -31,6 +31,7 @@
   <button class="導覽鈕" data-區="區教學">📚 教材教學</button>
   <button class="導覽鈕" data-區="區評量">📝 評量區</button>
   <button class="導覽鈕" data-區="區自學">🧠 自學區</button>
+  <button class="導覽鈕" data-區="區遊戲">⚖️ 磅秤遊戲</button>
   <button class="導覽鈕" data-區="區延伸">🔗 延伸學習</button>
 </nav>
 
@@ -202,6 +203,18 @@
   <div id="圖卡牆" class="圖卡牆"></div>
 </section>
 
+<!-- ══════════ 磅秤遊戲（本單元專屬，離線可用；內嵌 assets/game/scale-game.html） ══════════ -->
+<section class="分區" id="區遊戲">
+  <h2>⚖️ 磅秤遊戲</h2>
+  <p class="區說明">把東西放到磅秤上，看指針指到哪裡。<b>自由玩</b>可以隨便量，<b>小挑戰</b>要看指針選出重量。</p>
+  <div class="遊戲框">
+    <iframe src="assets/game/scale-game.html?v=1" title="磅秤小遊戲"></iframe>
+  </div>
+  <div class="按鈕列 置中">
+    <a class="次要鈕" href="assets/game/scale-game.html?v=1" target="_blank" rel="noopener">↗ 用整個畫面玩</a>
+  </div>
+</section>
+
 <!-- ══════════ 七、延伸學習（外部影片，需要網路） ══════════ -->
 <section class="分區" id="區延伸">
   <h2>🔗 延伸學習</h2>
@@ -275,10 +288,10 @@
 <canvas id="畫布" class="畫布"></canvas>
 
 <!-- 改版時把 v 加 1，避免瀏覽器沿用舊快取 -->
-<script src="js/config.js?v=5"></script>
-<script src="js/data.js?v=5"></script>
-<script src="js/speech.js?v=5"></script>
-<script src="js/tools.js?v=5"></script>
-<script src="js/app.js?v=5"></script>
+<script src="js/config.js?v=6"></script>
+<script src="js/data.js?v=6"></script>
+<script src="js/speech.js?v=6"></script>
+<script src="js/tools.js?v=6"></script>
+<script src="js/app.js?v=6"></script>
 </body>
 </html>

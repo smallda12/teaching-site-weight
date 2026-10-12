@@ -1,0 +1,583 @@
+<!doctype html>
+<html lang="zh-Hant-TW">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>磅秤小遊戲｜認識重量</title>
+<style>
+:root{
+  color-scheme: light;
+  --bg:#FFF8E7; --ink:#1F2937; --navy:#1E3A8A; --blue:#1D4ED8;
+  --red:#C81E1E; --green:#15803D; --orange:#C2410C;
+  --scale:#3F73AE; --scale-edge:#1E3A5F;   /* 磅秤本體：跟教學頁、圖卡的藍色磅秤一致 */
+  --edge:#334155; --focus:#FBBF24;
+}
+*{box-sizing:border-box}
+html,body{height:100%;margin:0}
+body{
+  background:var(--bg); color:var(--ink);
+  font-family:"Microsoft JhengHei","微軟正黑體","Noto Sans TC","PingFang TC",sans-serif;
+  font-size:24px; line-height:1.35;
+  display:grid; grid-template-rows:auto 1fr; height:100dvh; overflow:hidden;
+}
+button{font-family:inherit}
+:focus-visible{outline:5px solid var(--focus); outline-offset:2px}
+
+/* 上方工具列 */
+.top{display:flex; flex-wrap:wrap; gap:10px 22px; align-items:center; padding:10px 20px; background:var(--navy); color:#fff}
+.top h1{margin:0; font-size:30px}
+.seg{display:flex; gap:6px; padding:4px; border-radius:14px; background:rgba(255,255,255,.18)}
+.seg button{
+  font-size:24px; font-weight:800; padding:6px 18px; min-height:52px; border-radius:10px;
+  border:3px solid transparent; background:transparent; color:#fff; cursor:pointer;
+}
+.seg button[aria-pressed="true"]{background:#fff; color:var(--navy)}
+.top .grow{flex:1}
+.top .ghost{
+  font-size:24px; font-weight:800; padding:6px 18px; min-height:52px; border-radius:12px;
+  border:3px solid #fff; background:transparent; color:#fff; cursor:pointer;
+}
+
+/* 主區 */
+main{display:grid; grid-template-columns:minmax(0,1.05fr) minmax(0,1fr); gap:20px; padding:14px 20px 16px; min-height:0}
+.scale-zone{display:flex; flex-direction:column; align-items:center; min-height:0; border-radius:26px; padding:6px; transition:box-shadow .12s, background .12s}
+.scale-zone.hot{box-shadow:0 0 0 7px var(--focus); background:rgba(251,191,36,.18)}
+
+.plate{
+  width:min(92%,540px); min-height:132px; flex:none;
+  display:flex; flex-wrap:wrap; justify-content:center; align-content:flex-end; gap:8px;
+  padding:8px; background:var(--scale); border:5px solid var(--scale-edge); border-radius:22px 22px 10px 10px;
+  transition:transform .12s;
+}
+.plate:empty::before{content:"把東西放在這裡"; align-self:center; font-size:26px; font-weight:700; color:#fff}
+.neck{width:34px; height:14px; flex:none; background:var(--scale-edge)}
+.dial-wrap{flex:1 1 0; min-height:0; width:100%; display:flex; justify-content:center}
+#dial{height:100%; width:auto; max-width:100%; display:block}
+#dial.shake{animation:shake .45s}
+@keyframes shake{0%,100%{transform:translateX(0)}20%{transform:translateX(-8px)}40%{transform:translateX(8px)}60%{transform:translateX(-6px)}80%{transform:translateX(6px)}}
+
+.base{
+  flex:none; width:min(100%,560px); margin-top:-6px; padding:10px 16px 12px; text-align:center;
+  background:var(--scale); border:5px solid var(--scale-edge); border-radius:18px; color:#fff;
+}
+.readout{display:flex; align-items:baseline; justify-content:center; gap:14px; flex-wrap:wrap}
+.read-label{font-size:26px; font-weight:800}
+.read-value{font-size:46px; font-weight:900; color:var(--ink); background:#fff; border:4px solid var(--scale-edge); border-radius:14px; padding:0 18px; min-width:6.5em}
+.read-note{margin-top:6px; min-height:2.7em; font-size:25px; font-weight:700; white-space:pre-line}
+
+/* 物品卡 */
+.item{
+  display:flex; flex-direction:column; align-items:center; justify-content:center;
+  min-width:0; padding:6px 8px; background:#fff; border:4px solid var(--edge); border-radius:18px;
+  cursor:grab; touch-action:none; user-select:none; -webkit-user-select:none;
+}
+.item .emo{font-size:58px; line-height:1.1; font-family:"Segoe UI Emoji","Apple Color Emoji","Noto Color Emoji",sans-serif}
+.item .nm{font-size:26px; font-weight:800; white-space:nowrap}
+.item.lifted{opacity:.3}
+.plate .item{min-width:104px; padding:2px 8px; border-width:3px; cursor:pointer}
+.plate .item .emo{font-size:48px}
+.plate .item .nm{font-size:24px}
+.plate .item.static{cursor:default}
+.ghost-item{position:fixed; z-index:1000; pointer-events:none; transform:translate(-50%,-60%) scale(1.12); box-shadow:0 10px 24px rgba(0,0,0,.28)}
+
+/* 右側 */
+.side{display:flex; flex-direction:column; gap:12px; min-height:0}
+.side[hidden]{display:none}
+.panel-title{font-size:30px; font-weight:900; margin:0}
+.tray{display:grid; grid-template-columns:repeat(3,1fr); gap:12px}
+.slot{border:4px dashed #94A3B8; border-radius:20px; min-height:128px; display:flex}
+.slot .item{flex:1}
+.msg{min-height:3.1em; padding:8px 14px; border-radius:14px; border:3px solid transparent; font-size:26px; font-weight:800}
+.msg.info{background:#E0F2FE; border-color:#0369A1; color:#0C4A6E}
+.msg.ok{background:#DCFCE7; border-color:var(--green); color:#14532D}
+.msg.try{background:#FFEDD5; border-color:var(--orange); color:#7C2D12}
+.tip{font-size:24px; color:#334155; margin:0}
+
+/* 小挑戰 */
+.dots{display:flex; gap:10px; font-size:38px; line-height:1}
+.q-text{font-size:32px; font-weight:900; margin:0}
+.opts{display:grid; grid-template-columns:1fr 1fr; gap:16px}
+.opt{
+  display:flex; flex-direction:column; align-items:center; justify-content:center; gap:4px;
+  font-size:36px; font-weight:900; min-height:130px; padding:12px;
+  background:#fff; color:var(--navy); border:6px solid var(--navy); border-radius:22px; cursor:pointer;
+}
+.opt small{font-size:26px; font-weight:800; color:#475569}
+.opt:disabled{background:#E5E7EB; color:#475569; border-color:#94A3B8; cursor:default}
+.opt.right{background:#DCFCE7; border-color:var(--green); color:#14532D}
+.primary{
+  font-size:30px; font-weight:900; min-height:64px; padding:8px 28px; border-radius:16px;
+  border:none; background:var(--blue); color:#fff; cursor:pointer; align-self:flex-start;
+}
+.stars{font-size:54px}
+
+@media (max-width:900px){
+  body{height:auto; overflow:auto}
+  main{grid-template-columns:minmax(0,1fr)}
+  .scale-zone{height:78vh; min-height:520px}
+  .tray{grid-template-columns:repeat(3,minmax(0,1fr))}
+  .top h1{font-size:26px}
+}
+@media (max-width:560px){
+  body{font-size:20px}
+  .top{padding:8px 12px}
+  .seg button,.top .ghost{font-size:20px; padding:4px 10px; min-height:46px}
+  .item .emo{font-size:40px}
+  .item .nm{font-size:20px}
+  .slot{min-height:96px; border-width:3px}
+  .tray{gap:8px}
+  .plate{width:100%}
+  .plate .item{min-width:76px}
+  .plate .item .emo{font-size:36px}
+  .plate .item .nm{font-size:20px}
+  .read-value{font-size:36px; min-width:4.5em}
+  .read-label,.read-note,.msg,.tip{font-size:21px}
+  .panel-title,.q-text{font-size:26px}
+  .opt{font-size:30px; min-height:100px}
+  main{padding:10px 12px 14px}
+}
+@media (prefers-reduced-motion:reduce){
+  #dial.shake{animation:none}
+  .plate,.scale-zone{transition:none}
+}
+</style>
+</head>
+<body>
+
+<header class="top">
+  <h1>⚖️ 磅秤小遊戲</h1>
+  <div class="seg" role="group" aria-label="玩法">
+    <button type="button" id="modeFree" aria-pressed="true">自由玩</button>
+    <button type="button" id="modeQuiz" aria-pressed="false">小挑戰</button>
+  </div>
+  <div class="seg" id="scaleSeg" role="group" aria-label="選擇磅秤">
+    <button type="button" id="scaleKg" aria-pressed="true">公斤磅秤</button>
+    <button type="button" id="scaleG" aria-pressed="false">公克磅秤</button>
+  </div>
+  <span class="grow"></span>
+  <button type="button" class="ghost" id="clearBtn">全部拿下來</button>
+</header>
+
+<main>
+  <section class="scale-zone" id="scaleZone" aria-label="磅秤">
+    <div class="plate" id="plate"></div>
+    <div class="neck"></div>
+    <div class="dial-wrap"><svg id="dial" viewBox="0 0 400 400" role="img" aria-label="磅秤的刻度盤"></svg></div>
+    <div class="base">
+      <div class="readout">
+        <span class="read-label">重量</span>
+        <span class="read-value" id="readValue" aria-live="polite">0 公斤</span>
+      </div>
+      <div class="read-note" id="readNote"></div>
+    </div>
+  </section>
+
+  <!-- 自由玩 -->
+  <aside class="side" id="sideFree">
+    <p class="panel-title">拿一個東西，放到磅秤上</p>
+    <div class="tray" id="tray"></div>
+    <div class="msg info" id="freeMsg" aria-live="polite">用手拖到磅秤上，或直接點一下。再點一下，就拿下來。</div>
+    <p class="tip">先猜一猜，再看指針指到哪裡。</p>
+  </aside>
+
+  <!-- 小挑戰 -->
+  <aside class="side" id="sideQuiz" hidden>
+    <div class="dots" id="dots" aria-label="作答進度"></div>
+    <div id="quizBody"></div>
+  </aside>
+</main>
+
+<script>
+"use strict";
+
+/* ───────── 資料 ───────── */
+// 重量一律用「公克」存，公斤磅秤顯示時再換算。數值對齊單元教材：番茄 1 公斤、馬鈴薯 2 公斤、
+// 橘子 3 公斤、米 3 公斤、洋芋片 50 公克、500 公克＋500 公克＝1 公斤。
+const ITEMS = [
+  {id:"chips",  emo:"🍟", nm:"洋芋片", g:50},
+  {id:"apple",  emo:"🍎", nm:"蘋果",   g:200},
+  {id:"book",   emo:"📖", nm:"書本",   g:500},
+  {id:"bread",  emo:"🍞", nm:"吐司",   g:500},
+  {id:"tomato", emo:"🍅", nm:"番茄",   g:1000},
+  {id:"potato", emo:"🥔", nm:"馬鈴薯", g:2000},
+  {id:"orange", emo:"🍊", nm:"橘子",   g:3000},
+  {id:"rice",   emo:"🍚", nm:"一袋米", g:3000},
+  {id:"melon",  emo:"🍉", nm:"西瓜",   g:4000},
+];
+const BY_ID = Object.fromEntries(ITEMS.map(i => [i.id, i]));
+
+// 刻度盤與教學頁、圖卡一致：0 在正上方，順時針繞一圈，數字之間相隔 60°。
+// full＝指針轉滿一圈（360°）代表的重量；max＝這個磅秤最多能量的重量（轉到 300°，剛好是最後一個數字）。
+const SCALES = {
+  kg:{key:"kg", unit:"公斤", full:6000, max:5000, minor:500, labelEvery:1000, medEvery:500, labelDiv:1000, labelSize:44, maxText:"最多 5 公斤"},
+  g: {key:"g",  unit:"公克", full:1200, max:1000, minor:50,  labelEvery:200,  medEvery:100, labelDiv:1,    labelSize:34, maxText:"最多 1000 公克"},
+};
+const MAX_ON_PLATE = 4;
+
+// 小挑戰題庫：每題是一組物品（總重都落在好讀的刻度上）
+const POOL = {
+  kg:[["tomato"],["potato"],["orange"],["rice"],["melon"],
+      ["tomato","potato"],["tomato","orange"],["potato","orange"],["tomato","melon"]],
+  g: [["chips"],["apple"],["book"],["bread"],
+      ["chips","apple"],["chips","book"],["apple","book"],["book","bread"],["chips","apple","book"]],
+};
+
+/* ───────── 小工具 ───────── */
+const $ = id => document.getElementById(id);
+const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+const sumG = ids => ids.reduce((s, id) => s + BY_ID[id].g, 0);
+function shuffle(a){ a = a.slice(); for(let i=a.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [a[i],a[j]]=[a[j],a[i]]; } return a; }
+
+/* ───────── 刻度盤 ───────── */
+const CX = 200, CY = 200;
+// 角度 0＝正上方（12 點鐘），順時針為正
+function polar(r, deg){ const a = (deg - 90) * Math.PI / 180; return [CX + r*Math.cos(a), CY + r*Math.sin(a)]; }
+const f1 = n => n.toFixed(1);
+
+function dialSVG(sc){
+  let s = '<circle cx="200" cy="200" r="192" fill="#3F73AE" stroke="#1E3A5F" stroke-width="6"/>' +
+          '<circle cx="200" cy="200" r="168" fill="#FFFFFF" stroke="#1E3A5F" stroke-width="4"/>';
+  const n = Math.round(sc.full / sc.minor);          // 轉滿一圈的格數（不含回到 0 的那一格）
+  for(let i=0;i<n;i++){
+    const v = i * sc.minor, deg = 360 * v / sc.full;
+    const isLabel = v % sc.labelEvery === 0 && v <= sc.max, isMed = v % sc.medEvery === 0;
+    const len = isLabel ? 26 : (isMed ? 18 : 11), w = isLabel ? 5 : (isMed ? 3.5 : 2.5);
+    const [x1,y1] = polar(164 - len, deg), [x2,y2] = polar(163, deg);
+    s += `<line x1="${f1(x1)}" y1="${f1(y1)}" x2="${f1(x2)}" y2="${f1(y2)}" stroke="#1F2937" stroke-width="${w}" stroke-linecap="round"/>`;
+    if(isLabel){
+      const [tx,ty] = polar(164 - len - 24, deg);
+      s += `<text x="${f1(tx)}" y="${f1(ty)}" text-anchor="middle" dominant-baseline="central" font-size="${sc.labelSize}" font-weight="800" fill="#1F2937">${v / sc.labelDiv}</text>`;
+    }
+  }
+  // 指針先畫，單位文字疊在指針上面（指針轉到 0 時文字仍看得到）
+  s += '<g id="needle"><polygon points="193,218 207,218 200,52" fill="#C81E1E" stroke="#7F1D1D" stroke-width="2"/>' +
+       '<circle cx="200" cy="200" r="17" fill="#1F2937"/></g>' +
+       `<text x="200" y="136" text-anchor="middle" font-size="32" font-weight="900" fill="#1D4ED8" stroke="#fff" stroke-width="6" paint-order="stroke">${sc.unit}</text>` +
+       `<text x="200" y="254" text-anchor="middle" font-size="18" font-weight="700" fill="#334155" stroke="#fff" stroke-width="5" paint-order="stroke">${sc.maxText}</text>`;
+  return s;
+}
+
+/* ───────── 指針動畫（彈簧） ───────── */
+let ang = 0, vel = 0, target = 0, raf = 0, lastT = 0, needleEl = null;
+function drawNeedle(){ if(needleEl) needleEl.setAttribute("transform", `rotate(${ang.toFixed(2)} 200 200)`); }
+function setTarget(a, instant){
+  target = a;
+  if(reduced || instant){ ang = a; vel = 0; drawNeedle(); onSettled(); return; }
+  if(!raf){ lastT = performance.now(); raf = requestAnimationFrame(step); }
+}
+function step(t){
+  const dt = Math.min(0.034, (t - lastT) / 1000); lastT = t;
+  vel += (120 * (target - ang) - 11 * vel) * dt;
+  ang += vel * dt;
+  drawNeedle();
+  if(Math.abs(target - ang) < 0.15 && Math.abs(vel) < 1.5){
+    ang = target; vel = 0; drawNeedle(); raf = 0; onSettled(); return;
+  }
+  raf = requestAnimationFrame(step);
+}
+// 重量（公克）→ 指針角度；超過最大量時只多轉一點點，停在「5」與「0」之間的空檔
+function angleFor(g, sc){ return 360 * Math.min(g, sc.max * 1.08) / sc.full; }
+
+/* ───────── 狀態 ───────── */
+let mode = "free";            // free | quiz
+let scale = SCALES.kg;
+let panIds = [];              // 自由玩：磅秤上的物品（依放上去順序）
+let pendingReadout = {val:"0 公斤", note:""};
+
+const plate = $("plate"), tray = $("tray"), zone = $("scaleZone"), dial = $("dial");
+const slotOf = {}, itemEl = {};
+
+/* ───────── 讀數文字 ───────── */
+function kgText(g){
+  const kg = Math.floor(g / 1000), r = g % 1000;
+  return kg + " 公斤" + (r ? " " + r + " 公克" : "");
+}
+function describe(total, names){
+  if(total === 0) return {val:"0 " + scale.unit, note:"把東西放到磅秤上，看指針指到哪裡。"};
+  if(total > scale.max){
+    return scale.key === "g"
+      ? {val:"超過了！", note:"太重了，這個磅秤最多量 1000 公克。換成「公斤磅秤」吧！"}
+      : {val:"超過了！", note:"太重了，這個磅秤最多量 5 公斤。拿下一個東西。"};
+  }
+  if(scale.key === "kg" && total < 1000){
+    return {val:"不到 1 公斤", note:"太輕了，換成「公克磅秤」量量看。"};
+  }
+  const val = scale.key === "kg" ? kgText(total) : total + " 公克";
+  let note = names.length > 1 ? names.join(" ＋ ") + " ＝ " + val : names[0] + "重 " + val;
+  if(scale.key === "g" && total === 1000) note += "\n1000 公克 ＝ 1 公斤";
+  return {val, note};
+}
+function onSettled(){
+  $("readValue").textContent = pendingReadout.val;
+  $("readNote").textContent = pendingReadout.note;
+  dial.setAttribute("aria-label", "磅秤的刻度盤，" + pendingReadout.val);
+}
+
+/* ───────── 磅秤切換 ───────── */
+function applyScale(key){
+  scale = SCALES[key];
+  dial.innerHTML = dialSVG(scale);
+  needleEl = $("needle");
+  ang = 0; vel = 0; target = 0; drawNeedle();
+  $("scaleKg").setAttribute("aria-pressed", String(key === "kg"));
+  $("scaleG").setAttribute("aria-pressed", String(key === "g"));
+}
+
+/* ───────── 自由玩：物品與互動 ───────── */
+function makeItem(it, isStatic){
+  const el = document.createElement("div");
+  el.className = "item" + (isStatic ? " static" : "");
+  el.dataset.id = it.id;
+  el.innerHTML = `<span class="emo" aria-hidden="true">${it.emo}</span><span class="nm">${it.nm}</span>`;
+  if(!isStatic){ el.tabIndex = 0; el.setAttribute("role", "button"); }
+  return el;
+}
+function say(text, cls){ const m = $("freeMsg"); m.textContent = text; m.className = "msg " + (cls || "info"); }
+
+function refreshFree(){
+  const total = sumG(panIds);
+  const names = panIds.map(id => BY_ID[id].nm);
+  const over = total > scale.max;
+  pendingReadout = describe(total, names);
+  if(!reduced){ $("readValue").textContent = "…"; $("readNote").textContent = ""; }
+  plate.style.transform = `translateY(${Math.round(Math.min(total / scale.max, 1) * 10)}px)`;
+  setTarget(angleFor(total, scale), false);
+  if(over){ dial.classList.remove("shake"); void dial.getBoundingClientRect(); dial.classList.add("shake"); }
+}
+function addToPan(id){
+  if(panIds.includes(id)) return;
+  if(panIds.length >= MAX_ON_PLATE){ say("磅秤上最多放 " + MAX_ON_PLATE + " 個，先拿下一個。", "try"); return; }
+  panIds.push(id);
+  plate.appendChild(itemEl[id]);
+  say(BY_ID[id].nm + " 放上去了，看指針！", "info");
+  refreshFree();
+}
+function removeFromPan(id){
+  const i = panIds.indexOf(id);
+  if(i < 0) return;
+  panIds.splice(i, 1);
+  slotOf[id].appendChild(itemEl[id]);
+  say(BY_ID[id].nm + " 拿下來了。", "info");
+  refreshFree();
+}
+function clearPan(){
+  panIds.slice().forEach(id => slotOf[id].appendChild(itemEl[id]));
+  panIds = [];
+  plate.style.transform = "";
+}
+function overZone(ev){
+  const r = zone.getBoundingClientRect();
+  return ev.clientX >= r.left && ev.clientX <= r.right && ev.clientY >= r.top && ev.clientY <= r.bottom;
+}
+function toggleItem(id){ panIds.includes(id) ? removeFromPan(id) : addToPan(id); }
+
+function bindItem(el){
+  const id = el.dataset.id;
+  el.addEventListener("pointerdown", e => {
+    if(mode !== "free" || (e.pointerType === "mouse" && e.button !== 0)) return;
+    e.preventDefault();
+    const sx = e.clientX, sy = e.clientY;
+    let dragging = false, ghost = null;
+    el.setPointerCapture(e.pointerId);
+    const move = ev => {
+      if(!dragging && Math.hypot(ev.clientX - sx, ev.clientY - sy) > 8){
+        dragging = true;
+        ghost = el.cloneNode(true); ghost.classList.add("ghost-item"); ghost.removeAttribute("tabindex");
+        document.body.appendChild(ghost); el.classList.add("lifted");
+      }
+      if(dragging){
+        ghost.style.left = ev.clientX + "px"; ghost.style.top = ev.clientY + "px";
+        zone.classList.toggle("hot", overZone(ev));
+      }
+    };
+    const finish = (ev, cancelled) => {
+      el.removeEventListener("pointermove", move);
+      el.removeEventListener("pointerup", up);
+      el.removeEventListener("pointercancel", cancel);
+      zone.classList.remove("hot");
+      if(dragging){
+        ghost.remove(); el.classList.remove("lifted");
+        if(cancelled) return;
+        const on = panIds.includes(id);
+        if(overZone(ev)){ if(!on) addToPan(id); }
+        else if(on){ removeFromPan(id); }
+      } else if(!cancelled){
+        toggleItem(id);
+      }
+    };
+    const up = ev => finish(ev, false);
+    const cancel = ev => finish(ev, true);
+    el.addEventListener("pointermove", move);
+    el.addEventListener("pointerup", up);
+    el.addEventListener("pointercancel", cancel);
+  });
+  el.addEventListener("keydown", e => {
+    if(mode !== "free") return;
+    if(e.key === "Enter" || e.key === " "){ e.preventDefault(); toggleItem(id); }
+  });
+}
+
+function buildTray(){
+  ITEMS.forEach(it => {
+    const slot = document.createElement("div"); slot.className = "slot";
+    const el = makeItem(it, false);
+    slot.appendChild(el); tray.appendChild(slot);
+    slotOf[it.id] = slot; itemEl[it.id] = el;
+    bindItem(el);
+  });
+}
+
+/* ───────── 小挑戰 ───────── */
+let quiz = null;
+function pickDistinct(list, scaleKey, n){
+  const out = [], seen = new Set();
+  for(const ids of shuffle(list)){
+    const t = sumG(ids);
+    if(seen.has(t)) continue;
+    seen.add(t); out.push({scale:scaleKey, ids});
+    if(out.length === n) break;
+  }
+  return out;
+}
+function optText(sc, g){ return sc.key === "kg" ? (g / 1000) + " 公斤" : g + " 公克"; }
+
+function startQuiz(){
+  const list = shuffle([...pickDistinct(POOL.kg, "kg", 3), ...pickDistinct(POOL.g, "g", 2)]);
+  quiz = {list, i:0, results:[], tries:0, posHist:[], locked:false};
+  showQuestion();
+}
+function renderDots(){
+  const box = $("dots"); box.textContent = "";
+  quiz.list.forEach((_, k) => {
+    const s = document.createElement("span");
+    const r = quiz.results[k];
+    s.textContent = r === undefined ? "⚪" : (r ? "⭐" : "🔵");
+    box.appendChild(s);
+  });
+}
+function choosePos(){
+  const h = quiz.posHist;
+  let pos = Math.random() < 0.5 ? 0 : 1;               // 0＝正解在 A，1＝正解在 B
+  if(h.length >= 2 && h[h.length-1] === h[h.length-2] && h[h.length-1] === pos) pos = 1 - pos;
+  h.push(pos);
+  return pos;
+}
+function showQuestion(){
+  const q = quiz.list[quiz.i];
+  const sc = SCALES[q.scale];
+  quiz.tries = 0; quiz.locked = false;
+  clearPan(); plate.textContent = "";
+  applyScale(q.scale);
+  q.ids.forEach(id => plate.appendChild(makeItem(BY_ID[id], true)));
+  const total = sumG(q.ids);
+  quiz.total = total;
+
+  const wrongs = q.scale === "kg" ? [total - 1000, total + 1000].filter(v => v >= 1000 && v <= 5000)
+                                  : [total - 100,  total + 100 ].filter(v => v >= 50  && v <= 1000);
+  const wrong = wrongs[Math.floor(Math.random() * wrongs.length)];
+  const pos = choosePos();
+  const texts = pos === 0 ? [optText(sc, total), optText(sc, wrong)] : [optText(sc, wrong), optText(sc, total)];
+  quiz.correctIdx = pos;
+
+  pendingReadout = {val:"？", note:"看指針指到哪裡。"};
+  $("readValue").textContent = "？"; $("readNote").textContent = "看指針指到哪裡。";
+  plate.style.transform = `translateY(${Math.round(Math.min(total / sc.max, 1) * 10)}px)`;
+  setTarget(angleFor(total, sc), false);
+  pendingReadout = {val:"？", note:"看指針指到哪裡。"};   // 動畫結束後仍維持「？」
+
+  renderDots();
+  const body = $("quizBody"); body.textContent = "";
+  body.appendChild(el("p", "q-text", "指針指到哪裡？這個東西重多少？"));
+  const opts = el("div", "opts");
+  texts.forEach((t, k) => {
+    const b = el("button", "opt"); b.type = "button";
+    b.innerHTML = `<small>${k === 0 ? "A" : "B"}</small><span>${t}</span>`;
+    b.addEventListener("click", () => answer(k, b));
+    opts.appendChild(b);
+  });
+  body.appendChild(opts);
+  const m = el("div", "msg info", "想一想，再選一個。"); m.id = "quizMsg"; m.setAttribute("aria-live", "polite");
+  body.appendChild(m);
+}
+function el(tag, cls, text){ const e = document.createElement(tag); if(cls) e.className = cls; if(text) e.textContent = text; return e; }
+
+function answer(k, btn){
+  if(quiz.locked) return;
+  const q = quiz.list[quiz.i], sc = SCALES[q.scale], msg = $("quizMsg");
+  quiz.tries++;
+  if(k === quiz.correctIdx){
+    quiz.locked = true;
+    btn.classList.add("right");
+    document.querySelectorAll(".opt").forEach(b => { b.disabled = true; });
+    quiz.results[quiz.i] = quiz.tries === 1;
+    renderDots();
+    const val = optText(sc, quiz.total);
+    const num = sc.key === "kg" ? quiz.total / 1000 : quiz.total;
+    let t = `答對了！指針指到 ${num}，就是 ${val}。`;
+    if(sc.key === "g" && quiz.total === 1000) t = "答對了！指針指到 1000，就是 1000 公克，也就是 1 公斤。";
+    msg.className = "msg ok"; msg.textContent = t;
+    pendingReadout = {val, note:q.ids.map(id => BY_ID[id].nm).join(" ＋ ")};
+    onSettled();
+    const last = quiz.i === quiz.list.length - 1;
+    const nb = el("button", "primary", last ? "看結果" : "下一題"); nb.type = "button";
+    nb.addEventListener("click", () => { if(last) showResult(); else { quiz.i++; showQuestion(); } });
+    $("quizBody").appendChild(nb); nb.focus();
+  } else {
+    btn.disabled = true;
+    msg.className = "msg try"; msg.textContent = "再看一次，指針指到哪一個數字？";
+  }
+}
+function showResult(){
+  const n = quiz.results.filter(Boolean).length;
+  clearPan(); plate.textContent = ""; applyScale("kg");
+  $("readValue").textContent = "0 公斤"; $("readNote").textContent = "";
+  renderDots();
+  const body = $("quizBody"); body.textContent = "";
+  body.appendChild(el("p", "q-text", n === quiz.list.length ? "太棒了！全部一次就答對！" : "完成了！"));
+  body.appendChild(el("div", "stars", "⭐".repeat(n) + "⚪".repeat(quiz.list.length - n)));
+  body.appendChild(el("p", "tip", `一次就答對 ${n} 題。`));
+  const again = el("button", "primary", "再玩一次"); again.type = "button";
+  again.addEventListener("click", startQuiz);
+  const back = el("button", "primary", "回到自由玩"); back.type = "button";
+  back.addEventListener("click", () => setMode("free"));
+  const row = el("div", "opts"); row.append(again, back);
+  body.appendChild(row);
+}
+
+/* ───────── 模式切換 ───────── */
+function setMode(m){
+  mode = m;
+  $("modeFree").setAttribute("aria-pressed", String(m === "free"));
+  $("modeQuiz").setAttribute("aria-pressed", String(m === "quiz"));
+  $("sideFree").hidden = m !== "free";
+  $("sideQuiz").hidden = m !== "quiz";
+  $("scaleSeg").style.display = m === "free" ? "" : "none";
+  $("clearBtn").style.display = m === "free" ? "" : "none";
+  clearPan(); plate.textContent = "";
+  if(m === "free"){
+    applyScale("kg");
+    pendingReadout = describe(0, []); onSettled();
+    say("用手拖到磅秤上，或直接點一下。再點一下，就拿下來。", "info");
+  } else {
+    startQuiz();
+  }
+}
+
+/* ───────── 啟動 ───────── */
+buildTray();
+$("modeFree").addEventListener("click", () => { if(mode !== "free") setMode("free"); });
+$("modeQuiz").addEventListener("click", () => { if(mode !== "quiz") setMode("quiz"); });
+$("scaleKg").addEventListener("click", () => switchScale("kg"));
+$("scaleG").addEventListener("click", () => switchScale("g"));
+$("clearBtn").addEventListener("click", () => { clearPan(); refreshFree(); say("全部拿下來了。", "info"); });
+function switchScale(key){
+  if(mode !== "free" || scale.key === key) return;
+  clearPan();
+  applyScale(key);
+  pendingReadout = describe(0, []); onSettled();
+  say(key === "g" ? "公克磅秤：最多量 1000 公克。輕的東西用它。" : "公斤磅秤：最多量 5 公斤。重的東西用它。", "info");
+}
+setMode("free");
+</script>
+</body>
+</html>
