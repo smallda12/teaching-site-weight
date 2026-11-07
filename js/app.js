@@ -338,6 +338,7 @@
     }
 
     function 離開() {
+      離開全螢幕();
       語音.停止();
       收開場();                    // 保險：開場區不可以帶著 .顯示 留在教學區裡
       作答序++;                    // 作廢還在等語音播完的流程
@@ -349,6 +350,39 @@
       畫重點清單();
     }
 
+    function 更新全螢幕鈕() {
+      const 按鈕 = $("#鈕全螢幕");
+      if (!按鈕) return;
+      const 可用 = typeof document.documentElement.requestFullscreen === "function" &&
+        typeof document.exitFullscreen === "function";
+      const 已全螢幕 = !!document.fullscreenElement;
+      按鈕.disabled = !可用;
+      按鈕.title = 可用 ? "切換簡報全螢幕" : "此瀏覽器不支援全螢幕";
+      按鈕.textContent = 已全螢幕 ? "⛶ 關閉全螢幕" : "⛶ 全螢幕";
+      按鈕.setAttribute("aria-pressed", String(已全螢幕));
+    }
+
+    async function 切換全螢幕() {
+      try {
+        if (document.fullscreenElement) {
+          await document.exitFullscreen();
+        } else if (typeof document.documentElement.requestFullscreen === "function") {
+          /* 整個頁面進入全螢幕，右側的畫筆與計時器工具列會一併保留。 */
+          await document.documentElement.requestFullscreen({ navigationUI: "hide" });
+        }
+      } catch (錯誤) {
+        console.warn("簡報全螢幕切換失敗。", 錯誤);
+      }
+    }
+
+    function 離開全螢幕() {
+      if (document.fullscreenElement && typeof document.exitFullscreen === "function") {
+        document.exitFullscreen().catch((錯誤) => console.warn("退出全螢幕失敗。", 錯誤));
+      }
+    }
+
+    document.addEventListener("fullscreenchange", 更新全螢幕鈕);
+
     function 畫教學頁() {
       const p = 目前重點.教學頁[步驟];
       $("#重點內容").innerHTML = `
@@ -358,6 +392,9 @@
           <span class="階段badge 教學中">教學 ${步驟 + 1}/${目前重點.教學頁.length}</span>
         </div>
         <img class="大圖 題圖" src="${頁圖(p.頁)}" alt="">
+        <div class="按鈕列 置中 無上距 簡報全螢幕列">
+          <button class="次要鈕" id="鈕全螢幕" type="button" aria-pressed="false">⛶ 全螢幕</button>
+        </div>
         <p class="口播稿">${p.稿}</p>
         <div class="按鈕列 置中">
           <button class="次要鈕" id="鈕再唸">🔊 再唸一次</button>
@@ -366,6 +403,8 @@
           <button class="主要鈕" id="鈕下步">${步驟 < 目前重點.教學頁.length - 1 ? "下一頁 →" : "開始練習 ✏️"}</button>
         </div>`;
       $("#鈕回重點").onclick = 離開;
+      $("#鈕全螢幕").onclick = 切換全螢幕;
+      更新全螢幕鈕();
       /* 主動按的按鈕不受自動朗讀開關影響，一定會播 */
       $("#鈕再唸").onclick = () => 語音.頁(p.頁);
       /* 教學頁任何一頁都能直接跳去看短片，不必翻到最後一頁 */
@@ -381,6 +420,7 @@
     }
 
     function 進評量() {
+      離開全螢幕();
       階段 = "評量"; 題序 = 0; 本輪對錯 = [];
       畫題目();
     }
@@ -391,6 +431,7 @@
     let 短片序 = 0;
 
     function 畫短片() {
+      離開全螢幕();
       語音.停止();
       const 全部 = 短片們(目前重點);
       if (短片序 >= 全部.length) 短片序 = 0;
@@ -605,7 +646,7 @@
       畫();
     }
 
-    return { 初始化, 離開 };
+    return { 初始化, 離開, 離開全螢幕 };
   })();
 
   /* ================================================================
@@ -878,6 +919,7 @@
   function 初始化分頁() {
     $$(".導覽鈕").forEach((b) => {
       b.onclick = () => {
+        教學.離開全螢幕();
         語音.停止();
         輪播.停();
         自學.停輪播();
