@@ -6,7 +6,7 @@
 <title>重量｜教學網</title>
 <!-- 內嵌的分頁小圖示，順便避免每次載入都對 favicon.ico 發出 404 -->
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><text y='26' font-size='26'>⚖️</text></svg>">
-<link rel="stylesheet" href="css/style.css?v=teach-fullscreen-20261107-v1">
+<link rel="stylesheet" href="css/style.css?v=fs-only-20261112-v1">
 </head>
 <body>
 
@@ -120,8 +120,9 @@
   <h2>🎬 教學影片</h2>
   <div class="卡片">
     <div class="影片區塊">
-      <div class="影片主體">
+      <div class="影片主體 影片全螢幕區">
         <video id="影片播放器" class="影片" controls playsinline preload="metadata"></video>
+        <div class="按鈕列 置中 影片全螢幕列"><button class="次要鈕 影片全螢幕鈕" type="button" aria-pressed="false">⛶ 全螢幕</button></div>
         <p class="小字" id="影片說明">影片內含字幕。點播放鍵開始，右下角可切換全螢幕。</p>
       </div>
       <!-- 播放清單：主影片＋各重點短片，由 app.js 依 data.js 自動產生 -->
@@ -288,10 +289,10 @@
 <canvas id="畫布" class="畫布"></canvas>
 
 <!-- 改版時把 v 加 1，避免瀏覽器沿用舊快取 -->
-<script src="js/config.js?v=teach-fullscreen-20261107-v1"></script>
-<script src="js/data.js?v=teach-fullscreen-20261107-v1"></script>
-<script src="js/speech.js?v=teach-fullscreen-20261107-v1"></script>
-<script src="js/tools.js?v=teach-fullscreen-20261107-v1"></script>
-<script src="js/app.js?v=teach-fullscreen-20261107-v1"></script>
+<script src="js/config.js?v=fs-only-20261112-v1"></script>
+<script src="js/data.js?v=fs-only-20261112-v1"></script>
+<script src="js/speech.js?v=fs-only-20261112-v1"></script>
+<script src="js/tools.js?v=fs-only-20261112-v1"></script>
+<script src="js/app.js?v=fs-only-20261112-v1"></script>
 </body>
 </html>

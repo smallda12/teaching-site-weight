@@ -704,3 +704,31 @@ body.作答中 .口播稿 { text-align: center; }
 .遊戲框 { border: 4px solid var(--綠深); border-radius: var(--圓); overflow: hidden; background: #fff8e7; box-shadow: var(--陰影); }
 .遊戲框 iframe { display: block; width: 100%; height: min(78vh, 780px); min-height: 520px; border: 0; }
 a.次要鈕 { text-decoration: none; }
+
+/* ---------- 區塊全螢幕：只顯示簡報／影片與下方按鈕（2026-11-12 老師指定） ----------
+   整頁進入全螢幕後，那一塊（.全螢幕主體）鋪滿畫面、蓋住頁首與導覽（z-index 45，導覽是 40）；
+   畫筆畫布（50）、側邊工具列（60）、計時器面板（61）、抽籤輪盤（dialog）都在它上面，照常可用。
+   左右各留 104px 給右下角的工具列，影片控制列才不會被工具蓋到。關閉全螢幕自動恢復。 */
+body.區塊全螢幕中 { overflow: hidden; }
+body.區塊全螢幕中 .全螢幕主體 {
+  position: fixed !important; inset: 0; z-index: 45;
+  display: flex !important; flex-direction: column; justify-content: center; gap: 12px;
+  width: auto !important; height: auto !important; max-width: none !important; max-height: none !important;
+  margin: 0 !important; padding: 16px 104px !important; overflow: hidden;
+  background: var(--綠背); border: 0; border-radius: 0; box-shadow: none;
+}
+body.區塊全螢幕中 #重點內容.全螢幕主體 > .階段列,
+body.區塊全螢幕中 #重點內容.全螢幕主體 > .口播稿,
+body.區塊全螢幕中 .影片全螢幕區.全螢幕主體 > :not(video):not(.影片全螢幕列) { display: none !important; }
+body.區塊全螢幕中 .全螢幕主體 > .大圖.題圖,
+body.區塊全螢幕中 .全螢幕主體 > video {
+  flex: 1 1 0; height: 0; min-height: 0; width: 100%;
+  max-width: none; max-height: none; margin: 0; object-fit: contain; aspect-ratio: auto;
+}
+/* 簡報圖在全螢幕不畫外框與白底，只留圖本身 */
+body.區塊全螢幕中 .全螢幕主體 > .大圖.題圖 { border-color: transparent; background: transparent; border-radius: 0; }
+body.區塊全螢幕中 .全螢幕主體 > .按鈕列 { flex: 0 0 auto; margin: 0; }
+@media (max-width: 700px) {
+  body.區塊全螢幕中 .全螢幕主體 { padding: 10px 12px !important; }
+}
+.影片全螢幕列 { margin-top: 10px; }

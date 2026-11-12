@@ -355,7 +355,7 @@
       if (!按鈕) return;
       const 可用 = typeof document.documentElement.requestFullscreen === "function" &&
         typeof document.exitFullscreen === "function";
-      const 已全螢幕 = !!document.fullscreenElement;
+      const 已全螢幕 = window.區塊全螢幕.目前() === $("#重點內容");   /* 影片全螢幕時這顆不算 */
       按鈕.disabled = !可用;
       按鈕.title = 可用 ? "切換簡報全螢幕" : "此瀏覽器不支援全螢幕";
       按鈕.textContent = 已全螢幕 ? "⛶ 關閉全螢幕" : "⛶ 全螢幕";
@@ -367,8 +367,9 @@
         if (document.fullscreenElement) {
           await document.exitFullscreen();
         } else if (typeof document.documentElement.requestFullscreen === "function") {
-          /* 整個頁面進入全螢幕，右側的畫筆與計時器工具列會一併保留。 */
-          await document.documentElement.requestFullscreen({ navigationUI: "hide" });
+          /* 2026-11-12 老師指定：全螢幕只顯示簡報／影片與下方按鈕（右下角畫筆、計時器、輪盤保留）。
+             整頁進入全螢幕後，由檔尾「區塊全螢幕」把 #重點內容 鋪滿畫面、蓋住頁首與導覽；關閉自動恢復。 */
+          await window.區塊全螢幕.進入($("#重點內容"));
         }
       } catch (錯誤) {
         console.warn("簡報全螢幕切換失敗。", 錯誤);
@@ -431,7 +432,7 @@
     let 短片序 = 0;
 
     function 畫短片() {
-      離開全螢幕();
+      /* 從全螢幕簡報點「看教學短片」時維持全螢幕，只顯示短片與下方按鈕（2026-11-12） */
       語音.停止();
       const 全部 = 短片們(目前重點);
       if (短片序 >= 全部.length) 短片序 = 0;
@@ -450,6 +451,9 @@
         </div>
         <video id="重點短片" class="重點短片" src="${v.檔}${資源v()}" controls playsinline preload="metadata"></video>
         ${選單}
+        <div class="按鈕列 置中 無上距 簡報全螢幕列">
+          <button class="次要鈕" id="鈕全螢幕" type="button" aria-pressed="false">⛶ 全螢幕</button>
+        </div>
         <div class="按鈕列 置中">
           <button class="次要鈕" id="鈕回教學">← 回教學頁</button>
           <button class="次要鈕" id="鈕重播短片">↺ 再看一次</button>
@@ -459,6 +463,8 @@
       $("#鈕回重點").onclick = 離開;
       /* 從短片回教學，回到這個重點的「第一頁」重新看起，不是回到最後一頁 */
       $("#鈕回教學").onclick = () => { 影.pause(); 階段 = "教學"; 步驟 = 0; 畫教學頁(); };
+      $("#鈕全螢幕").onclick = 切換全螢幕;
+      更新全螢幕鈕();
       $("#鈕重播短片").onclick = () => { 影.currentTime = 0; 影.play(); };
       $("#鈕進評量").onclick = () => { 影.pause(); 進評量(); };
       $$("[data-短片]").forEach((鈕) => {
@@ -995,4 +1001,70 @@
     評量.初始化();
     自學.初始化();
   });
+})();
+
+
+/* ══════════ 區塊全螢幕（2026-11-12 老師指定：全螢幕只顯示簡報／影片與下方按鈕（右下角畫筆、計時器、輪盤保留）） ══════════
+   整頁（document.documentElement）進入全螢幕，再把指定的那一塊（簡報 #重點內容、教學影片 .影片主體、
+   課文影片卡）加上 .全螢幕主體，由 CSS 鋪滿畫面、蓋住頁首與導覽；右下角工具列在更上層，照常可用。
+   只放大單一元素的話瀏覽器不會畫出工具列，所以不用 元素.requestFullscreen()。
+   關閉全螢幕（按鈕或 Esc）時 fullscreenchange 會把標記拿掉，版面自動恢復。
+   教學影片、課文影片下方的「⛶ 全螢幕」鈕也在這裡處理；不支援全螢幕的瀏覽器（例如 iPhone Safari）
+   把影片鈕藏起來，改用影片本身右下角的全螢幕。 */
+(function () {
+  let 目標 = null;
+  const 可用 = () => typeof document.documentElement.requestFullscreen === "function" &&
+    typeof document.exitFullscreen === "function";
+  const 目前 = () => (document.fullscreenElement === document.documentElement ? 目標 : null);
+
+  function 更新影片全螢幕鈕() {
+    document.querySelectorAll(".影片全螢幕鈕").forEach((鈕) => {
+      const 區 = 鈕.closest(".影片全螢幕區");
+      const 列 = 鈕.closest(".影片全螢幕列");
+      if (列) 列.style.display = 區 && 可用() ? "" : "none";
+      const 已全螢幕 = !!區 && 目前() === 區;
+      鈕.textContent = 已全螢幕 ? "⛶ 關閉全螢幕" : "⛶ 全螢幕";
+      鈕.title = 已全螢幕 ? "關閉全螢幕，回到原本畫面" : "只把影片放大到整個螢幕";
+      鈕.setAttribute("aria-pressed", String(已全螢幕));
+    });
+  }
+
+  function 套用() {
+    if (!document.fullscreenElement) 目標 = null;
+    const 主體 = 目前();
+    const 開 = !!主體 && 主體.isConnected;
+    document.querySelectorAll(".全螢幕主體").forEach((e) => {
+      if (!開 || e !== 主體) e.classList.remove("全螢幕主體");
+    });
+    if (開) 主體.classList.add("全螢幕主體");
+    document.body.classList.toggle("區塊全螢幕中", 開);
+    更新影片全螢幕鈕();
+  }
+
+  async function 進入(區) {
+    if (!區 || !可用() || document.fullscreenElement) return;
+    目標 = 區;
+    try {
+      await document.documentElement.requestFullscreen({ navigationUI: "hide" });
+    } catch (錯誤) {
+      目標 = null;
+      throw 錯誤;
+    }
+  }
+
+  window.區塊全螢幕 = { 進入, 目前, 可用 };
+
+  document.addEventListener("click", (e) => {
+    const 鈕 = e.target && e.target.closest && e.target.closest(".影片全螢幕鈕");
+    if (!鈕) return;
+    const 區 = 鈕.closest(".影片全螢幕區");
+    const 動作 = document.fullscreenElement ? document.exitFullscreen() : 進入(區);
+    Promise.resolve(動作).catch((錯誤) => console.warn("影片全螢幕切換失敗。", 錯誤));
+  });
+  document.addEventListener("fullscreenchange", 套用);
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", 更新影片全螢幕鈕);
+  } else {
+    更新影片全螢幕鈕();
+  }
 })();
